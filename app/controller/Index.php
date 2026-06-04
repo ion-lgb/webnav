@@ -80,8 +80,7 @@ class Index extends BaseController
             return View::fetch('index/redirect_confirm');
         }
 
-        $site->click_count += 1;
-        $site->save();
+        Site::where('id', $site->id)->inc('click_count', 1)->update();
 
         ClickLog::create([
             'site_id'  => $site->id,
