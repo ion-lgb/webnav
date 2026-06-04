@@ -24,10 +24,20 @@ class Api extends BaseController
         $sites = Site::where('category_id', $categoryId)
             ->where('is_public', 1)
             ->order('sort_order', 'asc')
-            ->select()
-            ->toArray();
+            ->select();
 
-        return json(['code' => 0, 'data' => $sites]);
+        $data = [];
+        foreach ($sites as $site) {
+            $item = $site->toArray();
+            if (empty($item['icon_url'])) {
+                $parsed = parse_url($item['url'] ?? '');
+                $host = $parsed['host'] ?? '';
+                $item['icon_url'] = $host ? 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32' : '';
+            }
+            $data[] = $item;
+        }
+
+        return json(['code' => 0, 'data' => $data]);
     }
 
     public function fetchSiteMeta()
