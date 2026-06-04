@@ -46,10 +46,8 @@
                     <input type="url" name="url" id="siteUrl" value="{$site.url|default=''}" required
                         class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors"
                         placeholder="https://example.com">
-                    <button type="button" id="fetchIconBtn"
-                        class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap"
-                        title="自动获取网站图标">
-                        <i class="fas fa-sync-alt mr-1"></i> 获取图标
+                    <button type="button" id="autoFillBtn" onclick="autoFill()" class="px-3 py-2.5 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200 transition-colors whitespace-nowrap">
+                        <i class="fas fa-wand-magic-sparkles mr-1"></i>智能填充
                     </button>
                 </div>
             </div>
@@ -121,18 +119,43 @@
 
 {block name="js"}
 <script>
-document.getElementById('fetchIconBtn').addEventListener('click', function() {
+function autoFill() {
     var url = document.getElementById('siteUrl').value.trim();
-    if (!url) { alert('请先输入网站URL'); return; }
-    try {
-        var u = new URL(url);
-        var iconUrl = u.origin + '/favicon.ico';
-        document.getElementById('faviconInput').value = iconUrl;
-        updateFaviconPreview(iconUrl);
-    } catch(e) {
-        alert('URL格式不正确');
+    if (!url || !(url.startsWith('http://') || url.startsWith('https://'))) {
+        alert('请先输入完整的网址（http/https 开头）');
+        return;
     }
-});
+    var btn = document.getElementById('autoFillBtn');
+    var originalHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-pulse mr-1"></i>获取中...';
+    btn.disabled = true;
+
+    fetch('/api/fetch-site-meta?url=' + encodeURIComponent(url))
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            if (res.code === 0) {
+                var d = res.data;
+                if (d.title && !document.querySelector('[name="title"]').value) {
+                    document.querySelector('[name="title"]').value = d.title;
+                }
+                if (d.description && !document.querySelector('[name="description"]').value) {
+                    document.querySelector('[name="description"]').value = d.description;
+                }
+                if (d.icon_url && !document.querySelector('[name="icon_url"]').value) {
+                    document.querySelector('[name="icon_url"]').value = d.icon_url;
+                    var preview = document.getElementById('faviconPreview');
+                    if (preview) { preview.innerHTML = '<img src="' + d.icon_url + '" alt="" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML=\'<i class=\\\'fas fa-image\\\'></i>\'">'; }
+                }
+            } else {
+                alert('获取失败: ' + (res.msg || '未知错误'));
+            }
+        })
+        .catch(function() { alert('请求失败，请检查网络'); })
+        .finally(function() {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        });
+}
 
 document.getElementById('faviconInput').addEventListener('input', function() {
     updateFaviconPreview(this.value.trim());
