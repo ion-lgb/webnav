@@ -26,8 +26,7 @@ class Index extends BaseController
     {
         $sites = Site::where('is_public', 1)
             ->order('created_at', 'desc')
-            ->limit(60)
-            ->select();
+            ->paginate(24);
 
         View::assign('sites', $sites);
         return View::fetch();
@@ -37,8 +36,7 @@ class Index extends BaseController
     {
         $sites = Site::where('is_public', 1)
             ->order('click_count', 'desc')
-            ->limit(60)
-            ->select();
+            ->paginate(24);
 
         View::assign('sites', $sites);
         return View::fetch();
@@ -59,11 +57,11 @@ class Index extends BaseController
                     ->whereOr('url', 'like', '%' . $keyword . '%');
             })
             ->order('click_count', 'desc')
-            ->select();
+            ->paginate(24);
 
         View::assign('keyword', $keyword);
         View::assign('sites', $sites);
-        View::assign('count', count($sites));
+        View::assign('count', $sites->total());
         return View::fetch();
     }
 

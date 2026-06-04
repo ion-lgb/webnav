@@ -11,12 +11,17 @@
         <p class="text-gray-500 mt-1">共找到 {$count|default=0} 个结果</p>
     </div>
 
-    {if condition="$sites && count($sites) > 0"}
+    {if condition="!$sites->isEmpty()"}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {foreach $sites as $site}
         {include file="partials/site_card" /}
         {/foreach}
     </div>
+    {if $sites->total() > 0}
+    <div class="mt-8 flex justify-center">
+        {$sites|raw}
+    </div>
+    {/if}
     {else}
     <div class="text-center py-20">
         <i class="fas fa-search text-5xl text-gray-300 mb-4"></i>

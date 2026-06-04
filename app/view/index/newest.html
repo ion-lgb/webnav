@@ -12,11 +12,14 @@
         <p class="text-gray-500 mt-1">最近添加的网站</p>
     </div>
 
-    {if condition="$sites && count($sites) > 0"}
+    {if condition="!$sites->isEmpty()"}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {foreach $sites as $site}
         {include file="partials/site_card" /}
         {/foreach}
+    </div>
+    <div class="mt-8 flex justify-center">
+        {$sites|raw}
     </div>
     {else}
     <div class="text-center py-20">

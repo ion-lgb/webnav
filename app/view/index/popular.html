@@ -12,7 +12,7 @@
         <p class="text-gray-500 mt-1">点击量最高的网站</p>
     </div>
 
-    {if condition="$sites && count($sites) > 0"}
+    {if condition="!$sites->isEmpty()"}
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {foreach $sites as $site}
         <a href="/redirect?url={$site.url}" target="_blank" class="block bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 p-4 transition-all duration-200 hover:-translate-y-0.5 group">
@@ -28,6 +28,9 @@
             </div>
         </a>
         {/foreach}
+    </div>
+    <div class="mt-8 flex justify-center">
+        {$sites|raw}
     </div>
     {else}
     <div class="text-center py-20">
