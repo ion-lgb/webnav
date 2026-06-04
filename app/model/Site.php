@@ -31,13 +31,31 @@ class Site extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function getFaviconAttr($value, $data)
+    public static function resolveFavicon(string $url): string
     {
-        if (!empty($data['icon_url'])) {
-            return $data['icon_url'];
-        }
-        $parsed = parse_url($data['url'] ?? '');
+        $parsed = parse_url($url);
         $host = $parsed['host'] ?? '';
-        return $host ? 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32' : '';
+        $scheme = $parsed['scheme'] ?? 'https';
+        if (empty($host)) return '';
+
+        $directUrl = $scheme . '://' . $host . '/favicon.ico';
+        $ch = curl_init($directUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS      => 2,
+            CURLOPT_TIMEOUT        => 3,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_NOBODY         => true,
+        ]);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode >= 200 && $httpCode < 400) {
+            return $directUrl;
+        }
+
+        return 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
     }
 }

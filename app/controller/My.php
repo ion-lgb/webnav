@@ -73,11 +73,7 @@ class My extends BaseController
 
         $iconUrl = $data['icon_url'] ?? '';
         if (empty($iconUrl)) {
-            $parsed = parse_url($data['url'] ?? '');
-            $host = $parsed['host'] ?? '';
-            if (!empty($host)) {
-                $iconUrl = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
-            }
+            $iconUrl = Site::resolveFavicon($data['url'] ?? '');
         }
 
         Site::create([
@@ -212,10 +208,7 @@ class My extends BaseController
                 preg_match('/HREF\s*=\s*"([^"]+)"/i', $attrs, $urlMatch);
                 $url = $urlMatch[1] ?? '';
                 if (empty($url)) continue;
-                $iconUrl = '';
-                $p = parse_url($url);
-                $h = $p['host'] ?? '';
-                if ($h) $iconUrl = 'https://www.google.com/s2/favicons?domain=' . $h . '&sz=32';
+                $iconUrl = Site::resolveFavicon($url);
 
                 Site::create([
                     'title'       => $title,
@@ -271,10 +264,7 @@ class My extends BaseController
                     continue;
                 }
 
-                $iconUrl = '';
-                $p = parse_url($url);
-                $h = $p['host'] ?? '';
-                if ($h) $iconUrl = 'https://www.google.com/s2/favicons?domain=' . $h . '&sz=32';
+                $iconUrl = Site::resolveFavicon($url);
 
                 Site::create([
                     'title' => $title,

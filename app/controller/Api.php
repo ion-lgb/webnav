@@ -30,9 +30,7 @@ class Api extends BaseController
         foreach ($sites as $site) {
             $item = $site->toArray();
             if (empty($item['icon_url'])) {
-                $parsed = parse_url($item['url'] ?? '');
-                $host = $parsed['host'] ?? '';
-                $item['icon_url'] = $host ? 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32' : '';
+                $item['icon_url'] = Site::resolveFavicon($item['url'] ?? '');
             }
             $data[] = $item;
         }

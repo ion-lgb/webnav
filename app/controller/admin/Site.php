@@ -59,8 +59,8 @@ class Site extends BaseAdmin
 
             $parsed = parse_url($data['url']);
             $host = $parsed['host'] ?? '';
-            if (!empty($host)) {
-                $data['icon_url'] = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
+            if (!empty($host) && empty($data['icon_url'])) {
+                $data['icon_url'] = SiteModel::resolveFavicon($data['url']);
             }
 
             SiteModel::create($data);
@@ -97,8 +97,8 @@ class Site extends BaseAdmin
 
             $parsed = parse_url($data['url']);
             $host = $parsed['host'] ?? '';
-            if (!empty($host)) {
-                $data['icon_url'] = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
+            if (!empty($host) && empty($data['icon_url'])) {
+                $data['icon_url'] = SiteModel::resolveFavicon($data['url']);
             }
 
             SiteModel::update(array_merge($data, ['id' => $id]));
