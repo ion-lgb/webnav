@@ -58,6 +58,13 @@ class My extends BaseController
         $userId = session('user_id');
         $data = $this->request->post();
 
+        if (empty($data['title']) || empty($data['url'])) {
+            View::assign('error', '网站名称和地址不能为空');
+            $categories = Category::where('user_id', $userId)->order('sort_order', 'asc')->select();
+            View::assign('categories', $categories);
+            return View::fetch('index/my/addSite');
+        }
+
         $categoryId = $data['category_id'] ?? 0;
         $category = Category::find($categoryId);
         if (!$category || $category->user_id != $userId) {
@@ -174,14 +181,41 @@ class My extends BaseController
             return View::fetch();
         }
 
+        $categoryId = (int) $this->request->post('category_id', 0);
+
         $content = $file->getContent();
-        $this->parseBookmarkHtml($content, $userId);
+        $this->parseBookmarkHtml($content, $userId, $categoryId);
 
         return redirect('/my');
     }
 
-    private function parseBookmarkHtml(string $content, int $userId): void
+    private function parseBookmarkHtml(string $content, int $userId, int $categoryId = 0): void
     {
+        // If a target category is specified, import all links into it
+        if ($categoryId > 0) {
+            $category = Category::find($categoryId);
+            if (!$category || $category->user_id != $userId) {
+                return;
+            }
+            preg_match_all('/<DT><A\s+([^>]*)>(.*?)<\/A>/i', $content, $links, PREG_SET_ORDER);
+            foreach ($links as $link) {
+                $attrs = $link[1];
+                $title = $link[2];
+                preg_match('/HREF\s*=\s*"([^"]+)"/i', $attrs, $urlMatch);
+                $url = $urlMatch[1] ?? '';
+                if (empty($url)) continue;
+                Site::create([
+                    'title'       => $title,
+                    'url'         => $url,
+                    'category_id' => $categoryId,
+                    'user_id'     => $userId,
+                    'is_public'   => 0,
+                    'click_count' => 0,
+                ]);
+            }
+            return;
+        }
+
         preg_match_all('/<DT><H3[^>]*>(.*?)<\/H3>/i', $content, $folders, PREG_OFFSET_CAPTURE);
 
         $folderPositions = [];
