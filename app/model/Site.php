@@ -30,4 +30,14 @@ class Site extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function getFaviconAttr($value, $data)
+    {
+        if (!empty($data['icon_url'])) {
+            return $data['icon_url'];
+        }
+        $parsed = parse_url($data['url'] ?? '');
+        $host = $parsed['host'] ?? '';
+        return $host ? 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32' : '';
+    }
 }

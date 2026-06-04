@@ -24,16 +24,6 @@ class Index extends BaseController
                 ->order('sort_order', 'asc')
                 ->select();
 
-            foreach ($sites as $site) {
-                if (empty($site->icon_url)) {
-                    $parsed = parse_url($site->url);
-                    $host = $parsed['host'] ?? '';
-                    if (!empty($host)) {
-                        $site->icon_url = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
-                    }
-                }
-            }
-
             $category->sites = $sites;
         }
 
@@ -48,16 +38,6 @@ class Index extends BaseController
             ->limit(60)
             ->select();
 
-        foreach ($sites as $site) {
-            if (empty($site->icon_url)) {
-                $parsed = parse_url($site->url);
-                $host = $parsed['host'] ?? '';
-                if (!empty($host)) {
-                    $site->icon_url = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
-                }
-            }
-        }
-
         View::assign('sites', $sites);
         return View::fetch();
     }
@@ -68,16 +48,6 @@ class Index extends BaseController
             ->order('click_count', 'desc')
             ->limit(60)
             ->select();
-
-        foreach ($sites as $site) {
-            if (empty($site->icon_url)) {
-                $parsed = parse_url($site->url);
-                $host = $parsed['host'] ?? '';
-                if (!empty($host)) {
-                    $site->icon_url = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
-                }
-            }
-        }
 
         View::assign('sites', $sites);
         return View::fetch();
@@ -99,16 +69,6 @@ class Index extends BaseController
             })
             ->order('click_count', 'desc')
             ->select();
-
-        foreach ($sites as $site) {
-            if (empty($site->icon_url)) {
-                $parsed = parse_url($site->url);
-                $host = $parsed['host'] ?? '';
-                if (!empty($host)) {
-                    $site->icon_url = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
-                }
-            }
-        }
 
         View::assign('keyword', $keyword);
         View::assign('sites', $sites);

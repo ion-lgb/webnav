@@ -21,12 +21,7 @@
                 <p class="text-gray-500 mt-1 text-sm">注册 WebNav 开始收藏网站</p>
             </div>
 
-            {if condition="$error ?? ''"}
-            <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-                <i class="fas fa-exclamation-circle text-red-500"></i>
-                <span class="text-sm text-red-700">{$error}</span>
-            </div>
-            {/if}
+            {include file="partials/flash" /}
 
             <form action="/register" method="POST" class="space-y-5">
                 {:token_field()}
