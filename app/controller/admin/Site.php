@@ -49,6 +49,10 @@ class Site extends BaseAdmin
         if ($this->request->isPost()) {
             $data = $this->request->only(['title', 'url', 'description', 'category_id', 'user_id', 'is_public', 'sort_order', 'icon_url']);
 
+            if (empty($data['user_id'])) {
+                $data['user_id'] = session('user_id');
+            }
+
             if (empty($data['title']) || empty($data['url'])) {
                 return redirect('/admin/site/add')->with('error', '站点名称和URL不能为空');
             }
@@ -125,5 +129,15 @@ class Site extends BaseAdmin
 
         $site->delete();
         return redirect('/admin/sites')->with('success', '站点删除成功');
+    }
+
+    public function batchDelete()
+    {
+        $ids = $this->request->post('ids', '');
+        if (empty($ids)) return redirect('/admin/sites')->with('error', '请选择站点');
+        $idArr = array_filter(explode(',', $ids), 'is_numeric');
+        if (empty($idArr)) return redirect('/admin/sites')->with('error', '无效的选择');
+        SiteModel::destroy($idArr);
+        return redirect('/admin/sites')->with('success', '批量删除完成');
     }
 }
