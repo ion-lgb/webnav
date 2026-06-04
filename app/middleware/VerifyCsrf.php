@@ -25,11 +25,11 @@ class VerifyCsrf
         }
 
         $token = $request->post('__token__', '');
-        $sessionToken = session('__csrf_token__');
+        $sessionToken = session('__token__');
 
         if (empty($sessionToken)) {
             $sessionToken = bin2hex(random_bytes(32));
-            session('__csrf_token__', $sessionToken);
+            session('__token__', $sessionToken);
         }
 
         if (!hash_equals($sessionToken, $token)) {
