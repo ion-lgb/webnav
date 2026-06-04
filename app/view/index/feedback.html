@@ -1,0 +1,54 @@
+{extend name="layout"}
+
+{block name="title"}用户反馈 - WebNav{/block}
+
+{block name="content"}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+        <h1 class="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+            <i class="fas fa-comments text-indigo-600"></i>
+            <span>用户反馈</span>
+        </h1>
+        <p class="text-gray-500 text-sm mb-6">你的意见对我们很重要，欢迎提出宝贵建议</p>
+
+        {if isset($success)}
+        <div class="text-center py-12">
+            <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">提交成功</h2>
+            <p class="text-gray-500 mb-6">{$success}</p>
+            <a href="/" class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-700 transition-colors">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+        {else}
+        {if isset($error)}
+        <div class="mb-5 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+            <i class="fas fa-exclamation-circle text-red-500"></i>
+            <span class="text-sm text-red-700">{$error}</span>
+        </div>
+        {/if}
+
+        <form action="/feedback" method="POST" class="space-y-5">
+            {:token_field()}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">称呼</label>
+                <input type="text" name="name" placeholder="你的名字（可选）" value="{$user.username|default=''}" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
+                <input type="email" name="email" placeholder="联系邮箱（可选）" value="{$user.email|default=''}" class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                    反馈内容 <span class="text-red-500">*</span>
+                </label>
+                <textarea name="content" rows="6" placeholder="请详细描述你的问题或建议..." class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white resize-vertical" required></textarea>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+                <i class="fas fa-paper-plane mr-1"></i>提交反馈
+            </button>
+        </form>
+        {/if}
+    </div>
+</div>
+{/block}

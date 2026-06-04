@@ -30,6 +30,7 @@
         </div>
 
         <form action="/admin/category/edit/{$category.id}" method="post" class="p-6 space-y-5">
+            {:token_field()}
             <input type="hidden" name="id" value="{$category.id}">
 
             <div>

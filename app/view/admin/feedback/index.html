@@ -1,0 +1,96 @@
+{extend name="../admin_layout"}
+
+{block name="title"}反馈管理 - WebNav 管理后台{/block}
+
+{block name="breadcrumb"}
+<i class="fas fa-chevron-right text-xs mx-1"></i>
+<a href="/admin/feedbacks" class="hover:text-indigo-600 transition-colors">反馈管理</a>
+{/block}
+
+{block name="content"}
+{if session('success')}
+<div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700">
+    <i class="fas fa-check-circle"></i>
+    <span>{:session('success')}</span>
+</div>
+{/if}
+{if session('error')}
+<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{:session('error')}</span>
+</div>
+{/if}
+
+<div class="bg-white rounded-xl shadow-sm">
+    <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900">反馈列表</h2>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="bg-gray-50 text-gray-600">
+                    <th class="px-6 py-3 text-left font-medium">ID</th>
+                    <th class="px-6 py-3 text-left font-medium">提交者</th>
+                    <th class="px-6 py-3 text-left font-medium">内容</th>
+                    <th class="px-6 py-3 text-center font-medium">状态</th>
+                    <th class="px-6 py-3 text-left font-medium">时间</th>
+                    <th class="px-6 py-3 text-right font-medium">操作</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+            {foreach $feedbacks as $item}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-3 text-gray-500">{$item.id}</td>
+                    <td class="px-6 py-3">
+                        <div class="font-medium text-gray-900">{$item.name|default='匿名'}</div>
+                        {if condition="$item.email"}
+                        <div class="text-xs text-gray-400">{$item.email}</div>
+                        {/if}
+                    </td>
+                    <td class="px-6 py-3">
+                        <div class="max-w-xs text-gray-700 truncate">{$item.content}</div>
+                    </td>
+                    <td class="px-6 py-3 text-center">
+                        {if condition="$item.status == 0"}
+                        <span class="inline-flex px-2 py-0.5 rounded-md bg-yellow-50 text-yellow-700 text-xs font-medium">未回复</span>
+                        {elseif condition="$item.status == 1"}
+                        <span class="inline-flex px-2 py-0.5 rounded-md bg-green-50 text-green-700 text-xs font-medium">已回复</span>
+                        {else}
+                        <span class="inline-flex px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">已关闭</span>
+                        {/if}
+                    </td>
+                    <td class="px-6 py-3 text-gray-500 text-xs">{$item.created_at}</td>
+                    <td class="px-6 py-3 text-right">
+                        <div class="inline-flex items-center gap-2">
+                            <a href="/admin/feedback/reply/{$item.id}" class="text-indigo-600 hover:text-indigo-800 transition-colors">
+                                <i class="fas fa-reply"></i> 回复
+                            </a>
+                            {if condition="$item.status != 2"}
+                            <a href="/admin/feedback/close/{$item.id}" class="text-gray-400 hover:text-gray-600 transition-colors" onclick="return confirm('确定关闭该反馈？')">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {/if}
+                        </div>
+                    </td>
+                </tr>
+            {/foreach}
+            {if condition="empty($feedbacks) || $feedbacks->isEmpty()"}
+                <tr>
+                    <td colspan="6" class="px-6 py-8 text-center text-gray-400">暂无反馈数据</td>
+                </tr>
+            {/if}
+            </tbody>
+        </table>
+    </div>
+
+    {if condition="!empty($feedbacks) && $feedbacks->hasMore()"}
+    <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+        <div class="text-sm text-gray-500">共 {$feedbacks->total()} 条记录</div>
+        <div class="flex items-center gap-1">
+            {$feedbacks|raw}
+        </div>
+    </div>
+    {/if}
+</div>
+{/block}

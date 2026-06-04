@@ -1,0 +1,74 @@
+{extend name="../admin_layout"}
+
+{block name="title"}回复反馈 - WebNav 管理后台{/block}
+
+{block name="breadcrumb"}
+<i class="fas fa-chevron-right text-xs mx-1"></i>
+<a href="/admin/feedbacks" class="hover:text-indigo-600 transition-colors">反馈管理</a>
+<i class="fas fa-chevron-right text-xs mx-1"></i>
+<span class="text-gray-600">回复反馈</span>
+{/block}
+
+{block name="content"}
+{if session('error')}
+<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{:session('error')}</span>
+</div>
+{/if}
+
+<div class="space-y-6">
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">反馈详情</h2>
+        <div class="space-y-4">
+            <div class="flex gap-4">
+                <span class="text-sm text-gray-500 w-16">提交者:</span>
+                <span class="text-sm text-gray-900 font-medium">{$feedback.name|default='匿名'}</span>
+                {if $feedback.email}
+                <span class="text-sm text-gray-400">({$feedback.email})</span>
+                {/if}
+            </div>
+            <div class="flex gap-4">
+                <span class="text-sm text-gray-500 w-16">时间:</span>
+                <span class="text-sm text-gray-600">{$feedback.created_at}</span>
+            </div>
+            <div class="flex gap-4">
+                <span class="text-sm text-gray-500 w-16">状态:</span>
+                {if $feedback.status == 0}
+                <span class="inline-flex px-2 py-0.5 rounded-md bg-yellow-50 text-yellow-700 text-xs font-medium">未回复</span>
+                {elseif $feedback.status == 1}
+                <span class="inline-flex px-2 py-0.5 rounded-md bg-green-50 text-green-700 text-xs font-medium">已回复</span>
+                {else}
+                <span class="inline-flex px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">已关闭</span>
+                {/if}
+            </div>
+            <div class="pt-3 border-t border-gray-100">
+                <p class="text-sm text-gray-500 mb-1">反馈内容:</p>
+                <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{$feedback.content}</div>
+            </div>
+            {if $feedback.reply}
+            <div class="pt-3 border-t border-gray-100">
+                <p class="text-sm text-gray-500 mb-1">管理员回复 ({$feedback.replied_at}):</p>
+                <div class="bg-indigo-50 rounded-lg p-4 text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{$feedback.reply}</div>
+            </div>
+            {/if}
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">
+            {if $feedback.reply}修改回复{else}添加回复{/if}
+        </h2>
+        <form action="/admin/feedback/reply/{$feedback.id}" method="POST" class="space-y-4">
+            {:token_field()}
+            <textarea name="reply" rows="5" placeholder="输入回复内容..." class="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-vertical">{$feedback.reply}</textarea>
+            <div class="flex items-center gap-3">
+                <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-paper-plane mr-1"></i>发送回复
+                </button>
+                <a href="/admin/feedbacks" class="px-6 py-2.5 border border-gray-200 text-gray-600 rounded-lg text-sm hover:bg-gray-50 transition-colors">返回列表</a>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}

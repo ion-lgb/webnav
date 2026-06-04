@@ -75,6 +75,7 @@
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="/admin/category/delete/{$item.id}" method="post" class="inline" onsubmit="return confirm('确定要删除该分类吗？');">
+                                {:token_field()}
                                 <input type="hidden" name="method" value="DELETE">
                                 <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="删除">
                                     <i class="fas fa-trash-alt"></i>
