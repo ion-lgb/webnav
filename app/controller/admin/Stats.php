@@ -19,11 +19,11 @@ class Stats extends BaseAdmin
             ->limit(30)
             ->select();
 
-        $categoryClicks = Db::name('sites')
-            ->alias('s')
-            ->field('c.name as category_name, SUM(s.click_count) AS total_clicks')
-            ->leftJoin('categories c', 's.category_id = c.id')
-            ->group('s.category_id')
+        $categoryClicks = Db::name('categories')
+            ->alias('c')
+            ->field('c.name, c.icon, COALESCE(SUM(s.click_count), 0) AS total_clicks, COUNT(s.id) AS site_count')
+            ->leftJoin('sites s', 's.category_id = c.id')
+            ->group('c.id')
             ->order('total_clicks', 'desc')
             ->select();
 
