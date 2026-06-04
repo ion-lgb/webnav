@@ -12,16 +12,19 @@ class VerifyCsrf
 
     public function handle($request, \Closure $next)
     {
-        if ($request->isGet()) {
-            return $next($request);
-        }
-
         $path = trim($request->pathinfo(), '/');
 
         foreach ($this->except as $exclude) {
             if (str_starts_with($path, $exclude)) {
                 return $next($request);
             }
+        }
+
+        if ($request->isGet()) {
+            if (!session('__token__')) {
+                session('__token__', bin2hex(random_bytes(32)));
+            }
+            return $next($request);
         }
 
         $token = $request->post('__token__', '');
