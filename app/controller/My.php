@@ -266,6 +266,24 @@ class My extends BaseController
         }
     }
 
+    public function reorder()
+    {
+        $userId = session('user_id');
+        $ids = $this->request->post('ids', '');
+        if (empty($ids)) {
+            return json(['code' => 1, 'msg' => '缺少数据']);
+        }
+
+        $idArr = explode(',', $ids);
+        foreach ($idArr as $sort => $id) {
+            Site::where('id', $id)
+                ->where('user_id', $userId)
+                ->update(['sort_order' => $sort]);
+        }
+
+        return json(['code' => 0, 'msg' => '排序已更新']);
+    }
+
     public function export()
     {
         $userId = session('user_id');

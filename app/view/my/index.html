@@ -53,7 +53,7 @@
                 <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-300 category-arrow"></i>
             </button>
             <div class="category-content">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="sites-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {foreach $category.sites as $site}
                     <div class="site-card bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 p-4 transition-all duration-200 hover:-translate-y-0.5 relative group">
                         <div class="card-actions absolute top-2 right-2 flex gap-1">
@@ -67,7 +67,7 @@
                                 </button>
                             </form>
                         </div>
-                        <a href="/redirect?url={$site.url}" target="_blank" class="block">
+                        <a href="/redirect?url={$site.url}" target="_blank" draggable="true" data-id="{$site.id}" data-sort="{$site.sort_order}" class="block drag-item" ondragstart="handleDragStart(event)" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
                             <div class="flex items-start gap-3">
                                 <img src="{$site.icon_url ?: 'https://www.google.com/s2/favicons?domain=localhost'}" alt="" class="w-6 h-6 mt-0.5 rounded flex-shrink-0" onerror="this.src='https://www.google.com/s2/favicons?domain=localhost'">
                                 <div class="min-w-0 flex-1">
@@ -187,5 +187,52 @@ document.querySelectorAll('.icon-option').forEach(function(opt) {
         this.classList.add('border-indigo-500', 'bg-indigo-50');
     });
 });
+
+var draggedItem = null;
+var dragContainer = null;
+
+function handleDragStart(e) {
+    draggedItem = this;
+    dragContainer = this.parentElement;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', '');
+    this.classList.add('opacity-50');
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    if (dragContainer && draggedItem) {
+        var children = Array.from(dragContainer.children);
+        var fromIndex = children.indexOf(draggedItem);
+        var toItem = e.target.closest('.drag-item');
+        if (toItem && toItem !== draggedItem) {
+            var toIndex = children.indexOf(toItem);
+            if (fromIndex < toIndex) {
+                dragContainer.insertBefore(draggedItem, toItem.nextSibling);
+            } else {
+                dragContainer.insertBefore(draggedItem, toItem);
+            }
+        }
+    }
+    draggedItem.classList.remove('opacity-50');
+    saveOrder();
+}
+
+function saveOrder() {
+    var items = document.querySelectorAll('.sites-container .drag-item');
+    var ids = [];
+    items.forEach(function(item) { ids.push(item.getAttribute('data-id')); });
+    fetch('/my/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'ids=' + ids.join(',')
+    }).then(function(r) { return r.json(); })
+      .then(function(res) { if (res.code === 0) console.log('排序已保存'); });
+}
 </script>
 {/block}
