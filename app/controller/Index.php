@@ -5,6 +5,7 @@ namespace app\controller;
 
 use app\BaseController;
 use app\model\Category;
+use app\model\ClickLog;
 use app\model\Site;
 use think\facade\View;
 use think\facade\Db;
@@ -37,6 +38,48 @@ class Index extends BaseController
         }
 
         View::assign('categories', $categories);
+        return View::fetch();
+    }
+
+    public function newest()
+    {
+        $sites = Site::where('is_public', 1)
+            ->order('created_at', 'desc')
+            ->limit(60)
+            ->select();
+
+        foreach ($sites as $site) {
+            if (empty($site->icon_url)) {
+                $parsed = parse_url($site->url);
+                $host = $parsed['host'] ?? '';
+                if (!empty($host)) {
+                    $site->icon_url = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
+                }
+            }
+        }
+
+        View::assign('sites', $sites);
+        return View::fetch();
+    }
+
+    public function popular()
+    {
+        $sites = Site::where('is_public', 1)
+            ->order('click_count', 'desc')
+            ->limit(60)
+            ->select();
+
+        foreach ($sites as $site) {
+            if (empty($site->icon_url)) {
+                $parsed = parse_url($site->url);
+                $host = $parsed['host'] ?? '';
+                if (!empty($host)) {
+                    $site->icon_url = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
+                }
+            }
+        }
+
+        View::assign('sites', $sites);
         return View::fetch();
     }
 
@@ -81,11 +124,21 @@ class Index extends BaseController
             return redirect('/');
         }
 
-        $site = Site::where('url', $url)->find();
+        $site = Site::where('url', $url)->where('is_public', 1)->find();
 
-        if ($site) {
-            $site->where('id', $site->id)->inc('click_count')->update();
+        if (!$site) {
+            View::assign('targetUrl', $url);
+            return View::fetch('index/redirect_confirm');
         }
+
+        $site->inc('click_count')->update();
+
+        ClickLog::create([
+            'site_id'  => $site->id,
+            'user_id'  => session('user_id'),
+            'ip'       => $this->request->ip(),
+            'referer'  => $this->request->server('HTTP_REFERER', ''),
+        ]);
 
         return redirect($url);
     }
