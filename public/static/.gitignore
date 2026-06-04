@@ -2,3 +2,6 @@
 !.gitignore
 !css/
 !css/tailwind.css
+!css/fa.css
+!webfonts/
+!webfonts/*
