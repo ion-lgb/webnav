@@ -71,10 +71,20 @@ class My extends BaseController
             return View::fetch();
         }
 
+        $iconUrl = $data['icon_url'] ?? '';
+        if (empty($iconUrl)) {
+            $parsed = parse_url($data['url'] ?? '');
+            $host = $parsed['host'] ?? '';
+            if (!empty($host)) {
+                $iconUrl = 'https://www.google.com/s2/favicons?domain=' . $host . '&sz=32';
+            }
+        }
+
         Site::create([
             'title' => $data['title'] ?? '',
             'url' => $data['url'] ?? '',
             'description' => $data['description'] ?? '',
+            'icon_url' => $iconUrl,
             'category_id' => $categoryId,
             'user_id' => $userId,
             'is_public' => isset($data['is_public']) ? 1 : 0,
@@ -119,6 +129,7 @@ class My extends BaseController
             'title' => $data['title'] ?? $site->title,
             'url' => $data['url'] ?? $site->url,
             'description' => $data['description'] ?? $site->description,
+            'icon_url' => $data['icon_url'] ?? $site->icon_url,
             'category_id' => $categoryId,
             'is_public' => isset($data['is_public']) ? 1 : 0,
             'sort_order' => $data['sort_order'] ?? $site->sort_order,
@@ -201,9 +212,15 @@ class My extends BaseController
                 preg_match('/HREF\s*=\s*"([^"]+)"/i', $attrs, $urlMatch);
                 $url = $urlMatch[1] ?? '';
                 if (empty($url)) continue;
+                $iconUrl = '';
+                $p = parse_url($url);
+                $h = $p['host'] ?? '';
+                if ($h) $iconUrl = 'https://www.google.com/s2/favicons?domain=' . $h . '&sz=32';
+
                 Site::create([
                     'title'       => $title,
                     'url'         => $url,
+                    'icon_url'    => $iconUrl,
                     'category_id' => $categoryId,
                     'user_id'     => $userId,
                     'is_public'   => 0,
@@ -254,9 +271,15 @@ class My extends BaseController
                     continue;
                 }
 
+                $iconUrl = '';
+                $p = parse_url($url);
+                $h = $p['host'] ?? '';
+                if ($h) $iconUrl = 'https://www.google.com/s2/favicons?domain=' . $h . '&sz=32';
+
                 Site::create([
                     'title' => $title,
                     'url' => $url,
+                    'icon_url'    => $iconUrl,
                     'category_id' => $category->id,
                     'user_id' => $userId,
                     'is_public' => 0,
