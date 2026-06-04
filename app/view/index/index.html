@@ -62,22 +62,7 @@ function toggleCategory(btn) {
     arrow.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
 
     if (!collapsed) {
-        var categoryId = content.getAttribute('data-category-id');
-        if (!siteCache.has(categoryId)) {
-            fetch('/api/category/sites?id=' + categoryId)
-                .then(function(r) { return r.json(); })
-                .then(function(res) {
-                    if (res.code === 0) {
-                        siteCache.set(categoryId, true);
-                        var container = document.getElementById('sites-' + categoryId);
-                        if (res.data.length === 0) {
-                            container.innerHTML = '<div class="col-span-full text-center py-4 text-gray-400 text-sm">此分类暂无网站</div>';
-                        } else {
-                            container.innerHTML = res.data.map(renderSiteCard).join('');
-                        }
-                    }
-                });
-        }
+        loadCategorySites(content.getAttribute('data-category-id'));
     }
 }
 
@@ -97,5 +82,31 @@ function esc(s) {
     d.innerText = s;
     return d.innerHTML;
 }
+
+function loadCategorySites(categoryId) {
+    if (siteCache.has(categoryId)) return;
+    fetch('/api/category/sites?id=' + categoryId)
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+            if (res.code === 0) {
+                siteCache.set(categoryId, true);
+                var container = document.getElementById('sites-' + categoryId);
+                if (res.data.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center py-4 text-gray-400 text-sm">此分类暂无网站</div>';
+                } else {
+                    container.innerHTML = res.data.map(renderSiteCard).join('');
+                }
+            }
+        });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var contents = document.querySelectorAll('.category-content');
+    contents.forEach(function(content) {
+        if (!content.classList.contains('collapsed')) {
+            loadCategorySites(content.getAttribute('data-category-id'));
+        }
+    });
+});
 </script>
 {/block}
