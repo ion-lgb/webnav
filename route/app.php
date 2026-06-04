@@ -7,6 +7,8 @@ Route::get('redirect', 'Index/redirect');
 Route::get('newest', 'Index/newest');
 Route::get('popular', 'Index/popular');
 
+Route::get('api/category/sites', 'Api/categorySites');
+
 Route::get('bookmarks', 'My/index');
 
 Route::rule('login', 'Auth/login');

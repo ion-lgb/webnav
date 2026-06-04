@@ -18,15 +18,6 @@ class Index extends BaseController
             ->order('sort_order', 'asc')
             ->select();
 
-        foreach ($categories as $category) {
-            $sites = Site::where('category_id', $category->id)
-                ->where('is_public', 1)
-                ->order('sort_order', 'asc')
-                ->select();
-
-            $category->sites = $sites;
-        }
-
         View::assign('categories', $categories);
         return View::fetch();
     }

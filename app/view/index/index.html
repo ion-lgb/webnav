@@ -6,6 +6,7 @@
 <style>
 .category-content { transition: max-height 0.3s ease, opacity 0.3s ease; overflow: hidden; }
 .category-content.collapsed { max-height: 0 !important; opacity: 0; }
+.category-content.loading .site-grid { opacity: 0.5; }
 </style>
 {/block}
 
@@ -25,22 +26,20 @@
     </div>
 
     {foreach $categories as $category}
-    {if condition="$category.sites && count($category.sites) > 0"}
     <div class="mb-8">
         <button onclick="toggleCategory(this)" class="flex items-center gap-3 mb-4 group w-full">
             <i class="{$category.icon|default='fas fa-folder'} text-xl text-indigo-600 group-hover:text-indigo-700 transition-colors"></i>
             <h2 class="text-xl font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">{$category.name}</h2>
             <i class="fas fa-chevron-down text-sm text-gray-400 transition-transform duration-300 category-arrow"></i>
         </button>
-        <div class="category-content">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {foreach $category.sites as $site}
-                {include file="partials/site_card" /}
-                {/foreach}
+        <div class="category-content" id="category-{$category.id}" data-category-id="{$category.id}">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sites-container" id="sites-{$category.id}">
+                <div class="col-span-full text-center py-4 text-gray-400 text-sm loading-placeholder">
+                    <i class="fas fa-spinner fa-pulse mr-1"></i>加载中...
+                </div>
             </div>
         </div>
     </div>
-    {/if}
     {/foreach}
 
     {if condition="empty($categories) || count($categories) == 0"}
@@ -54,11 +53,49 @@
 
 {block name="js"}
 <script>
+var siteCache = new Map();
+
 function toggleCategory(btn) {
     var content = btn.nextElementSibling;
     var arrow = btn.querySelector('.category-arrow');
-    content.classList.toggle('collapsed');
-    arrow.style.transform = content.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
+    var collapsed = content.classList.toggle('collapsed');
+    arrow.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+
+    if (!collapsed) {
+        var categoryId = content.getAttribute('data-category-id');
+        if (!siteCache.has(categoryId)) {
+            fetch('/api/category/sites?id=' + categoryId)
+                .then(function(r) { return r.json(); })
+                .then(function(res) {
+                    if (res.code === 0) {
+                        siteCache.set(categoryId, true);
+                        var container = document.getElementById('sites-' + categoryId);
+                        if (res.data.length === 0) {
+                            container.innerHTML = '<div class="col-span-full text-center py-4 text-gray-400 text-sm">此分类暂无网站</div>';
+                        } else {
+                            container.innerHTML = res.data.map(renderSiteCard).join('');
+                        }
+                    }
+                });
+        }
+    }
+}
+
+function renderSiteCard(site) {
+    return '<a href="/redirect?url=' + encodeURIComponent(site.url) + '" target="_blank" class="block bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 p-4 transition-all duration-200 hover:-translate-y-0.5 group">'
+        + '<div class="flex items-start gap-3">'
+        + '<img src="' + esc(site.favicon || '/static/default-favicon.svg') + '" alt="" class="w-6 h-6 mt-0.5 rounded flex-shrink-0" onerror="this.src=\'/static/default-favicon.svg\'">'
+        + '<div class="min-w-0 flex-1">'
+        + '<h3 class="text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors truncate">' + esc(site.title) + '</h3>'
+        + '<p class="text-xs text-gray-500 mt-1 line-clamp-2">' + esc(site.description || '') + '</p>'
+        + '</div></div></a>';
+}
+
+function esc(s) {
+    if (!s) return '';
+    var d = document.createElement('div');
+    d.innerText = s;
+    return d.innerHTML;
 }
 </script>
 {/block}
