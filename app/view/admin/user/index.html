@@ -26,10 +26,22 @@
         <h2 class="text-lg font-semibold text-gray-900">用户列表</h2>
     </div>
 
+    <div class="px-6 py-2 border-b border-gray-100 flex items-center gap-3 hidden" id="batchBar-user">
+        <span class="text-sm text-gray-600">已选 <span id="batchCount-user">0</span> 项</span>
+        <form id="batchForm-user" action="/admin/users/batch-delete" method="post" onsubmit="return submitBatch('user')" style="display:inline">
+            <input type="hidden" name="ids" id="batchIds-user" value="">
+            {:token_field()}
+            <button type="submit" class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700">
+                <i class="fas fa-trash-alt"></i> 批量删除
+            </button>
+        </form>
+    </div>
+
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="bg-gray-50 text-gray-600">
+                    <th class="px-6 py-3 text-center font-medium w-12"><input type="checkbox" onclick="toggleAll(this)"></th>
                     <th class="px-6 py-3 text-left font-medium">ID</th>
                     <th class="px-6 py-3 text-left font-medium">用户名</th>
                     <th class="px-6 py-3 text-left font-medium">邮箱</th>
@@ -42,6 +54,7 @@
             <tbody class="divide-y divide-gray-100">
             {foreach $users as $item}
                 <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-3 text-center"><input type="checkbox" name="ids[]" value="{$item.id}" class="batch-check"></td>
                     <td class="px-6 py-3 text-gray-500">{$item.id}</td>
                     <td class="px-6 py-3 font-medium text-gray-900">
                         <div class="flex items-center gap-2">
@@ -102,7 +115,7 @@
             {/foreach}
             {if condition="empty($users)"}
                 <tr>
-                    <td colspan="7" class="px-6 py-8 text-center text-gray-400">暂无用户数据</td>
+                    <td colspan="8" class="px-6 py-8 text-center text-gray-400">暂无用户数据</td>
                 </tr>
             {/if}
             </tbody>
@@ -118,4 +131,30 @@
     </div>
     {/if}
 </div>
+{/block}
+
+{block name="js"}
+<script>
+function toggleAll(el) {
+    var checked = el.checked;
+    document.querySelectorAll('.batch-check').forEach(function(c) { c.checked = checked; });
+    updateBatchBar('user');
+}
+document.querySelectorAll('.batch-check').forEach(function(c) {
+    c.addEventListener('change', function() { updateBatchBar('user'); });
+});
+function updateBatchBar(page) {
+    var ids = [];
+    document.querySelectorAll('.batch-check:checked').forEach(function(c) { ids.push(c.value); });
+    document.getElementById('batchIds-' + page).value = ids.join(',');
+    document.getElementById('batchCount-' + page).innerText = ids.length;
+    var bar = document.getElementById('batchBar-' + page);
+    bar.classList.toggle('hidden', ids.length === 0);
+}
+function submitBatch(page) {
+    var ids = document.getElementById('batchIds-' + page).value;
+    if (!ids) { alert('请选择项目'); return false; }
+    return confirm('确定要操作选中的项目吗？');
+}
+</script>
 {/block}

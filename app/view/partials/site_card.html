@@ -1,8 +1,8 @@
-<a href="/redirect?url={$site.url}" target="_blank" class="block bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md border border-gray-100/50 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+<a href="/redirect?url={$site.url}" target="_blank" class="block bg-white/90 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md border border-amber-100/40 p-4 transition-all duration-200 hover:-translate-y-0.5 group cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40">
     <div class="flex items-start gap-3">
-        <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" class="w-8 h-8 mt-0.5 rounded flex-shrink-0" onerror="this.src='/static/default-favicon.svg'">
+        <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" class="w-9 h-9 mt-0.5 rounded-lg flex-shrink-0 shadow-sm" onerror="this.src='/static/default-favicon.svg'">
         <div class="min-w-0 flex-1">
-            <h3 class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-150 truncate">{$site.title}</h3>
+            <h3 class="text-sm font-semibold text-gray-800 group-hover:text-amber-700 transition-colors duration-150 truncate">{$site.title}</h3>
             {if $site.description}<p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">{$site.description}</p>{/if}
         </div>
     </div>

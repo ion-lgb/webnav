@@ -6,6 +6,8 @@ namespace app;
 use think\App;
 use think\exception\ValidateException;
 use think\Validate;
+use think\facade\View;
+use app\model\User;
 
 /**
  * 控制器基础类
@@ -52,7 +54,13 @@ abstract class BaseController
 
     // 初始化
     protected function initialize()
-    {}
+    {
+        $userId = session('user_id');
+        if ($userId) {
+            $user = User::find($userId);
+            View::assign('user', $user);
+        }
+    }
 
     /**
      * 验证数据

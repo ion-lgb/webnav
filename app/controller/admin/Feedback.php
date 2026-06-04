@@ -60,4 +60,14 @@ class Feedback extends BaseAdmin
 
         return redirect('/admin/feedbacks')->with('success', '反馈已关闭');
     }
+
+    public function batchClose()
+    {
+        $ids = $this->request->post('ids', '');
+        if (empty($ids)) return redirect('/admin/feedbacks')->with('error', '请选择反馈');
+        $idArr = array_filter(explode(',', $ids), 'is_numeric');
+        if (empty($idArr)) return redirect('/admin/feedbacks')->with('error', '无效的选择');
+        FeedbackModel::whereIn('id', $idArr)->update(['status' => 2]);
+        return redirect('/admin/feedbacks')->with('success', '批量关闭完成');
+    }
 }

@@ -114,4 +114,18 @@ class Category extends BaseAdmin
         $category->delete();
         return redirect('/admin/categories')->with('success', '分类删除成功');
     }
+
+    public function batchDelete()
+    {
+        $ids = $this->request->post('ids', '');
+        if (empty($ids)) return redirect('/admin/categories')->with('error', '请选择分类');
+        $idArr = array_filter(explode(',', $ids), 'is_numeric');
+        if (empty($idArr)) return redirect('/admin/categories')->with('error', '无效的选择');
+        foreach ($idArr as $id) {
+            $siteCount = Site::where('category_id', $id)->count();
+            if ($siteCount > 0) continue;
+            CategoryModel::destroy($id);
+        }
+        return redirect('/admin/categories')->with('success', '批量删除完成');
+    }
 }
