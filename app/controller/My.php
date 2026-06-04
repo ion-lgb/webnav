@@ -6,14 +6,11 @@ namespace app\controller;
 use app\BaseController;
 use app\model\Category;
 use app\model\Site;
-use app\middleware\AuthCheck;
 use think\facade\View;
 use think\facade\Db;
 
 class My extends BaseController
 {
-    protected $middleware = [AuthCheck::class];
-
     public function index()
     {
         $userId = session('user_id');

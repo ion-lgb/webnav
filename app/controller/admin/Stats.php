@@ -4,15 +4,11 @@ declare(strict_types=1);
 namespace app\controller\admin;
 
 use app\controller\admin\BaseAdmin;
-use app\middleware\AuthCheck;
-use app\middleware\AdminCheck;
 use think\facade\View;
 use think\facade\Db;
 
 class Stats extends BaseAdmin
 {
-    protected $middleware = [AuthCheck::class, AdminCheck::class];
-
     public function index()
     {
         $topSites = Db::name('sites')

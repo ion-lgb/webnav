@@ -6,15 +6,11 @@ namespace app\controller\admin;
 use app\controller\admin\BaseAdmin;
 use app\model\Category as CategoryModel;
 use app\model\Site;
-use app\middleware\AuthCheck;
-use app\middleware\AdminCheck;
 use think\facade\View;
 use think\facade\Db;
 
 class Category extends BaseAdmin
 {
-    protected $middleware = [AuthCheck::class, AdminCheck::class];
-
     public function index()
     {
         $categories = CategoryModel::order('sort_order', 'asc')->paginate(15);

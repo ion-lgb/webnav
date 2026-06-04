@@ -7,14 +7,10 @@ use app\controller\admin\BaseAdmin;
 use app\model\Site as SiteModel;
 use app\model\Category;
 use app\model\User;
-use app\middleware\AuthCheck;
-use app\middleware\AdminCheck;
 use think\facade\View;
 
 class Site extends BaseAdmin
 {
-    protected $middleware = [AuthCheck::class, AdminCheck::class];
-
     public function index()
     {
         $searchTitle = $this->request->param('title', '');

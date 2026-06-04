@@ -5,14 +5,10 @@ namespace app\controller\admin;
 
 use app\controller\admin\BaseAdmin;
 use app\model\Page as PageModel;
-use app\middleware\AuthCheck;
-use app\middleware\AdminCheck;
 use think\facade\View;
 
 class Page extends BaseAdmin
 {
-    protected $middleware = [AuthCheck::class, AdminCheck::class];
-
     public function index()
     {
         $pages = PageModel::order('id', 'asc')->select();

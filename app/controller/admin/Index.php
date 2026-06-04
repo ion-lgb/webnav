@@ -8,15 +8,11 @@ use app\model\User;
 use app\model\Category;
 use app\model\Site;
 use app\model\ClickLog;
-use app\middleware\AuthCheck;
-use app\middleware\AdminCheck;
 use think\facade\View;
 
 
 class Index extends BaseAdmin
 {
-    protected $middleware = [AuthCheck::class, AdminCheck::class];
-
     public function index()
     {
         $totalUsers = User::count();
