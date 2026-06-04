@@ -1,0 +1,105 @@
+{extend name="../admin_layout"}
+
+{block name="title"}分类管理 - WebNav 管理后台{/block}
+
+{block name="breadcrumb"}
+<i class="fas fa-chevron-right text-xs mx-1"></i>
+<a href="/admin/categories" class="hover:text-indigo-600 transition-colors">分类管理</a>
+{/block}
+
+{block name="content"}
+{if condition="session('success')"}
+<div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700">
+    <i class="fas fa-check-circle"></i>
+    <span>{:session('success')}</span>
+</div>
+{/if}
+{if condition="session('error')"}
+<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{:session('error')}</span>
+</div>
+{/if}
+
+<div class="bg-white rounded-xl shadow-sm">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-900">分类列表</h2>
+        <a href="/admin/category/add" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            <i class="fas fa-plus"></i>
+            <span>添加分类</span>
+        </a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="bg-gray-50 text-gray-600">
+                    <th class="px-6 py-3 text-left font-medium">ID</th>
+                    <th class="px-6 py-3 text-left font-medium">分类名</th>
+                    <th class="px-6 py-3 text-left font-medium">图标</th>
+                    <th class="px-6 py-3 text-left font-medium">父分类</th>
+                    <th class="px-6 py-3 text-left font-medium">类型</th>
+                    <th class="px-6 py-3 text-center font-medium">排序</th>
+                    <th class="px-6 py-3 text-right font-medium">操作</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+            {foreach $categories as $item}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-3 text-gray-500">{$item.id}</td>
+                    <td class="px-6 py-3 font-medium text-gray-900">{$item.name|default=''}</td>
+                    <td class="px-6 py-3">
+                        {if condition="$item.icon"}
+                        <i class="{$item.icon} text-gray-600"></i>
+                        <span class="ml-1 text-gray-400 text-xs">{$item.icon}</span>
+                        {else}
+                        <span class="text-gray-300">-</span>
+                        {/if}
+                    </td>
+                    <td class="px-6 py-3 text-gray-600">{$item.parent_name|default='顶级分类'}</td>
+                    <td class="px-6 py-3">
+                        {if condition="$item.is_public == 1"}
+                        <span class="inline-flex px-2 py-0.5 rounded-md bg-green-50 text-green-700 text-xs font-medium">
+                            <i class="fas fa-unlock mr-1"></i>公共
+                        </span>
+                        {else}
+                        <span class="inline-flex px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                            <i class="fas fa-lock mr-1"></i>私有
+                        </span>
+                        {/if}
+                    </td>
+                    <td class="px-6 py-3 text-center text-gray-600">{$item.sort_order|default=0}</td>
+                    <td class="px-6 py-3 text-right">
+                        <div class="inline-flex items-center gap-2">
+                            <a href="/admin/category/edit/{$item.id}" class="text-indigo-600 hover:text-indigo-800 transition-colors" title="编辑">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="/admin/category/delete/{$item.id}" method="post" class="inline" onsubmit="return confirm('确定要删除该分类吗？');">
+                                <input type="hidden" name="method" value="DELETE">
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="删除">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {/foreach}
+            {if condition="empty($categories)"}
+                <tr>
+                    <td colspan="7" class="px-6 py-8 text-center text-gray-400">暂无分类数据</td>
+                </tr>
+            {/if}
+            </tbody>
+        </table>
+    </div>
+
+    {if condition="!empty($categories) && $categories->hasMore()"}
+    <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+        <div class="text-sm text-gray-500">共 {$categories->total()} 条记录</div>
+        <div class="flex items-center gap-1">
+            {$categories|raw}
+        </div>
+    </div>
+    {/if}
+</div>
+{/block}

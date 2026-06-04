@@ -1,0 +1,119 @@
+{extend name="../admin_layout"}
+
+{block name="title"}编辑分类 - WebNav 管理后台{/block}
+
+{block name="breadcrumb"}
+<i class="fas fa-chevron-right text-xs mx-1"></i>
+<a href="/admin/categories" class="hover:text-indigo-600 transition-colors">分类管理</a>
+<i class="fas fa-chevron-right text-xs mx-1"></i>
+<span class="text-gray-800 font-medium">编辑分类</span>
+{/block}
+
+{block name="content"}
+{if condition="session('success')"}
+<div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700">
+    <i class="fas fa-check-circle"></i>
+    <span>{:session('success')}</span>
+</div>
+{/if}
+{if condition="session('error')"}
+<div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+    <i class="fas fa-exclamation-circle"></i>
+    <span>{:session('error')}</span>
+</div>
+{/if}
+
+<div class="max-w-2xl">
+    <div class="bg-white rounded-xl shadow-sm">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-900">编辑分类：{$category.name|default=''}</h2>
+        </div>
+
+        <form action="/admin/category/edit/{$category.id}" method="post" class="p-6 space-y-5">
+            <input type="hidden" name="id" value="{$category.id}">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">分类名 <span class="text-red-500">*</span></label>
+                <input type="text" name="name" value="{$category.name|default=''}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors"
+                    placeholder="请输入分类名称">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">图标</label>
+                <div class="flex items-center gap-3">
+                    <input type="text" name="icon" value="{$category.icon|default=''}"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors"
+                        placeholder="FontAwesome 图标类名，如 fas fa-folder">
+                    <div id="iconPreview" class="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center text-gray-400">
+                        {if condition="$category.icon"}
+                        <i class="{$category.icon}"></i>
+                        {else}
+                        <i class="fas fa-eye-slash"></i>
+                        {/if}
+                    </div>
+                </div>
+                <p class="mt-1 text-xs text-gray-400">参考：<a href="https://fontawesome.com/icons" target="_blank" class="text-indigo-500 hover:underline">FontAwesome 图标库</a></p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">父分类</label>
+                <select name="parent_id"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors bg-white">
+                    <option value="">顶级分类</option>
+                    {foreach $parentCategories as $cat}
+                    <option value="{$cat.id}" {if condition="$cat.id == $category.parent_id"}selected{/if}>{$cat.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                <div class="flex items-center gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="is_public" value="1" {if condition="$category.is_public == 1 || is_null($category.is_public)"}checked{/if} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                        <span class="text-sm text-gray-700">公共</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="is_public" value="0" {if condition="$category.is_public == 0 && !is_null($category.is_public)"}checked{/if} class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                        <span class="text-sm text-gray-700">私有</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">排序</label>
+                <input type="number" name="sort_order" value="{$category.sort_order|default=0}"
+                    class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-colors"
+                    placeholder="0">
+                <p class="mt-1 text-xs text-gray-400">数字越小越靠前</p>
+            </div>
+
+            <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+                <button type="submit"
+                    class="px-6 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                    <i class="fas fa-save mr-1"></i> 保存
+                </button>
+                <a href="/admin/categories"
+                    class="px-6 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+                    取消
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+document.querySelector('input[name="icon"]').addEventListener('input', function() {
+    var preview = document.getElementById('iconPreview');
+    var val = this.value.trim();
+    if (val) {
+        preview.innerHTML = '<i class="' + val + '"></i>';
+    } else {
+        preview.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    }
+});
+</script>
+{/block}
