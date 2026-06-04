@@ -30,7 +30,7 @@ class User extends BaseAdmin
         }
 
         if ($this->request->isPost()) {
-            $data = $this->request->only(['role', 'status']);
+            $data = $this->request->only(['role', 'status', 'email']);
 
             UserModel::update(array_merge($data, ['id' => $id]));
             return redirect('/admin/users')->with('success', '用户修改成功');
