@@ -7,6 +7,7 @@ use app\controller\admin\BaseAdmin;
 use app\model\User;
 use app\model\Category;
 use app\model\Site;
+use app\model\ClickLog;
 use app\middleware\AuthCheck;
 use app\middleware\AdminCheck;
 use think\facade\View;
@@ -21,7 +22,9 @@ class Index extends BaseAdmin
         $totalUsers = User::count();
         $totalSites = Site::count();
         $totalCategories = Category::count();
-        $todayClicks = 0;
+        $todayClicks = ClickLog::where('created_at', '>=', date('Y-m-d 00:00:00'))
+            ->where('created_at', '<=', date('Y-m-d 23:59:59'))
+            ->count();
 
         $recentSites = Site::with(['category', 'user'])
             ->order('id', 'desc')

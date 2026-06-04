@@ -31,8 +31,8 @@ class Stats extends BaseAdmin
             ->order('total_clicks', 'desc')
             ->select();
 
-        $dailyTrends = Db::name('sites')
-            ->field('DATE(created_at) AS date, SUM(click_count) AS click_count')
+        $dailyTrends = Db::name('click_logs')
+            ->field('DATE(created_at) AS date, COUNT(*) AS click_count')
             ->whereTime('created_at', 'between', [date('Y-m-d', strtotime('-30 days')), date('Y-m-d')])
             ->group('DATE(created_at)')
             ->order('date', 'asc')

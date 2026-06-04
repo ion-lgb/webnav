@@ -51,7 +51,7 @@ class Site extends BaseAdmin
     public function add()
     {
         if ($this->request->isPost()) {
-            $data = $this->request->only(['title', 'url', 'description', 'category_id', 'user_id', 'is_public', 'sort_order']);
+            $data = $this->request->only(['title', 'url', 'description', 'category_id', 'user_id', 'is_public', 'sort_order', 'icon_url']);
 
             if (empty($data['title']) || empty($data['url'])) {
                 return redirect('/admin/site/add')->with('error', '站点名称和URL不能为空');
@@ -89,7 +89,7 @@ class Site extends BaseAdmin
         }
 
         if ($this->request->isPost()) {
-            $data = $this->request->only(['title', 'url', 'description', 'category_id', 'user_id', 'is_public', 'sort_order']);
+            $data = $this->request->only(['title', 'url', 'description', 'category_id', 'user_id', 'is_public', 'sort_order', 'icon_url']);
 
             if (empty($data['title']) || empty($data['url'])) {
                 return redirect('/admin/site/edit/' . $id)->with('error', '站点名称和URL不能为空');

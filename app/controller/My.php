@@ -146,8 +146,9 @@ class My extends BaseController
         }
 
         Category::create([
-            'name' => $name,
-            'user_id' => $userId,
+            'name'       => $name,
+            'user_id'    => $userId,
+            'icon'       => $this->request->post('icon', 'fas fa-folder'),
             'sort_order' => $this->request->post('sort_order', 0),
         ]);
 
@@ -157,6 +158,11 @@ class My extends BaseController
     public function import()
     {
         if ($this->request->isGet()) {
+            $userId = session('user_id');
+            $personalCategories = Category::where('user_id', $userId)
+                ->order('sort_order', 'asc')
+                ->select();
+            View::assign('personal_categories', $personalCategories);
             return View::fetch();
         }
 
@@ -232,6 +238,14 @@ class My extends BaseController
     public function export()
     {
         $userId = session('user_id');
+
+        if ($this->request->isGet()) {
+            $personalCategories = Category::where('user_id', $userId)
+                ->order('sort_order', 'asc')
+                ->select();
+            View::assign('personal_categories', $personalCategories);
+            return View::fetch();
+        }
 
         $categories = Category::where('user_id', $userId)
             ->order('sort_order', 'asc')
