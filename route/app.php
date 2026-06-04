@@ -8,6 +8,7 @@ Route::get('newest', 'Index/newest');
 Route::get('popular', 'Index/popular');
 
 Route::get('api/category/sites', 'Api/categorySites');
+Route::get('api/fetch-site-meta', 'Api/fetchSiteMeta');
 
 Route::get('bookmarks', 'My/index');
 
