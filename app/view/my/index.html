@@ -4,7 +4,7 @@
 
 {block name="css"}
 <style>
-.site-card .card-actions { opacity: 0; transition: opacity 0.2s ease; }
+.site-card .card-actions { opacity: 0; transition: opacity 0.2s; }
 .site-card:hover .card-actions { opacity: 1; }
 .category-content { transition: max-height 0.3s ease, opacity 0.3s ease; overflow: hidden; }
 .category-content.collapsed { max-height: 0 !important; opacity: 0; }
@@ -13,165 +13,115 @@
 {/block}
 
 {block name="content"}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 flex items-center justify-center">
-                    <i class="fas fa-bookmark text-amber-600"></i>
-                </div>
-                我的书签
-            </h1>
+<div style="margin-top: 24px;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div class="cat-title mb-0">
+            <i class="fas fa-bookmark" style="color: var(--theme-color);"></i>
+            <h2>我的书签</h2>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-            <a href="/my/add_site" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium rounded-xl hover:from-amber-600 hover:to-orange-600 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
-                <i class="fas fa-plus text-xs"></i>
-                <span>添加网站</span>
-            </a>
-            <button onclick="showAddCategoryModal()" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white border border-amber-200/60 text-amber-700 text-sm font-medium rounded-xl hover:bg-amber-50 transition-all duration-200 cursor-pointer">
-                <i class="fas fa-folder-plus text-xs"></i>
-                <span>添加分类</span>
-            </button>
-            <a href="/my/import" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-all duration-200 cursor-pointer">
-                <i class="fas fa-file-import text-xs"></i>
-                <span>导入</span>
-            </a>
-            <a href="/my/export" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-all duration-200 cursor-pointer">
-                <i class="fas fa-file-export text-xs"></i>
-                <span>导出</span>
-            </a>
+            <a href="/my/add_site" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-white cursor-pointer" style="background: var(--theme-color);"><i class="fas fa-plus text-xs"></i>添加网站</a>
+            <button onclick="showAddCategoryModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer" style="border: 1px solid var(--border-color); color: var(--muted-color2); background: var(--main-bg-color);"><i class="fas fa-folder-plus text-xs"></i>添加分类</button>
+            <a href="/my/import" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer" style="border: 1px solid var(--border-color); color: var(--muted-color2); background: var(--main-bg-color);"><i class="fas fa-file-import text-xs"></i>导入</a>
+            <a href="/my/export" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer" style="border: 1px solid var(--border-color); color: var(--muted-color2); background: var(--main-bg-color);"><i class="fas fa-file-export text-xs"></i>导出</a>
         </div>
     </div>
 
     {if condition="$myCategories && count($myCategories) > 0"}
-    <div class="mb-12">
-        <h2 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
-            <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 flex items-center justify-center">
-                <i class="fas fa-user text-amber-600 text-[10px]"></i>
-            </div>
-            <span>个人分类</span>
-        </h2>
+    <div class="mb-8">
         {foreach $myCategories as $category}
-        {if condition="$category.sites && count($category.sites) > 0"}
-        <div class="mb-8">
-            <button onclick="toggleCategory(this)" class="flex items-center gap-3 mb-4 group w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 rounded-xl px-3 py-2 -mx-3 transition-all duration-200 hover:bg-amber-50/50">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors duration-200">
-                    <i class="{$category.icon|default='fas fa-folder'} text-amber-600 text-sm"></i>
-                </div>
-                <h3 class="text-base font-semibold text-gray-700 group-hover:text-amber-700 transition-colors duration-200">{$category.name}</h3>
-                <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-300 category-arrow ml-auto"></i>
-            </button>
+        <div class="content-card mb-5">
+            <div class="cat-title">
+                <i class="{$category.icon|default='fas fa-folder'}" style="color: var(--theme-color);"></i>
+                <h2>{$category.name}</h2>
+                <i class="fas fa-chevron-down text-xs ml-auto cursor-pointer category-arrow" style="color: var(--muted-color); transition: transform 0.3s;"></i>
+            </div>
+            {if condition="$category.sites && count($category.sites) > 0"}
             <div class="category-content">
-                <div class="sites-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                <div class="sites-grid">
                     {foreach $category.sites as $site}
-                    <div class="site-card bg-white/90 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md border border-amber-100/40 p-4 transition-all duration-200 hover:-translate-y-0.5 relative group">
-                        <div class="card-actions absolute top-2 right-2 flex gap-1">
-                            <a href="/my/editSite/{$site.id}" class="w-7 h-7 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-amber-50 text-gray-400 hover:text-amber-600 transition-colors duration-150 cursor-pointer" title="编辑">
-                                <i class="fas fa-pen text-xs"></i>
-                            </a>
+                    <div class="site-card relative">
+                        <div class="card-actions absolute top-2 right-2 flex gap-1 z-10">
+                            <a href="/my/editSite/{$site.id}" class="w-6 h-6 flex items-center justify-center rounded-md text-xs cursor-pointer" style="background: var(--body-bg); color: var(--muted-color);"><i class="fas fa-pen"></i></a>
                             <form action="/my/deleteSite/{$site.id}" method="POST" class="inline" onsubmit="return confirm('确定要删除该网站吗？');">
                                 {:token_field()}
-                                <button type="submit" class="w-7 h-7 flex items-center justify-center rounded-lg bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors duration-150 cursor-pointer" title="删除">
-                                    <i class="fas fa-trash text-xs"></i>
-                                </button>
+                                <button type="submit" class="w-6 h-6 flex items-center justify-center rounded-md text-xs cursor-pointer" style="background: var(--body-bg); color: #e74c3c;"><i class="fas fa-trash"></i></button>
                             </form>
                         </div>
-                        <a href="/redirect?url={$site.url}" target="_blank" draggable="true" data-id="{$site.id}" data-sort="{$site.sort_order}" class="block drag-item" ondragstart="handleDragStart(event)" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-                            <div class="flex items-start gap-3">
-                                <img src="{$site.icon_url ?: 'https://www.google.com/s2/favicons?domain=localhost'}" alt="" class="w-9 h-9 mt-0.5 rounded-lg flex-shrink-0 shadow-sm" onerror="this.src='https://www.google.com/s2/favicons?domain=localhost'">
-                                <div class="min-w-0 flex-1">
-                                    <h4 class="text-sm font-semibold text-gray-800 group-hover:text-amber-700 transition-colors duration-150 truncate">{$site.title}</h4>
-                                    <p class="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">{$site.description|default=''}</p>
-                                </div>
+                        <a href="/redirect?url={$site.url}" target="_blank" draggable="true" data-id="{$site.id}" data-sort="{$site.sort_order}" class="site-item drag-item" ondragstart="handleDragStart(event)" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                            <div class="site-icon-wrap">
+                                <img src="{$site.icon_url ?: '/static/default-favicon.svg'}" alt="" onerror="this.src='/static/default-favicon.svg'">
+                            </div>
+                            <div class="site-info">
+                                <div class="site-title">{$site.title}</div>
+                                <div class="site-desc">{$site.description|default=''}</div>
                             </div>
                         </a>
                     </div>
                     {/foreach}
                 </div>
             </div>
-        </div>
-        {else}
-        <div class="mb-8">
-            <button onclick="toggleCategory(this)" class="flex items-center gap-3 mb-4 group w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 rounded-xl px-3 py-2 -mx-3 transition-all duration-200 hover:bg-amber-50/50">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 flex items-center justify-center group-hover:from-amber-100 group-hover:to-orange-100 transition-colors duration-200">
-                    <i class="{$category.icon|default='fas fa-folder'} text-amber-600 text-sm"></i>
-                </div>
-                <h3 class="text-base font-semibold text-gray-700 group-hover:text-amber-700 transition-colors duration-200">{$category.name}</h3>
-                <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-300 category-arrow ml-auto"></i>
-            </button>
+            {else}
             <div class="category-content">
-                <p class="text-sm text-gray-400 py-4 text-center"><i class="fas fa-inbox mr-1"></i>该分类暂无网站</p>
+                <p class="text-sm text-center py-4" style="color: var(--muted-color);"><i class="fas fa-inbox mr-1"></i>该分类暂无网站</p>
             </div>
+            {/if}
         </div>
-        {/if}
         {/foreach}
     </div>
     {/if}
 
     {if condition="$publicCategories && count($publicCategories) > 0"}
-    <div>
-        <h2 class="text-lg font-semibold text-gray-800 mb-6 flex items-center gap-2">
-            <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200/60 flex items-center justify-center">
-                <i class="fas fa-globe text-green-600 text-[10px]"></i>
-            </div>
-            <span>公共分类</span>
-        </h2>
-        {foreach $publicCategories as $category}
-        {if condition="$category.sites && count($category.sites) > 0"}
-        <div class="mb-8">
-            <button onclick="toggleCategory(this)" class="flex items-center gap-3 mb-4 group w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500/40 rounded-xl px-3 py-2 -mx-3 transition-all duration-200 hover:bg-amber-50/50">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200/60 flex items-center justify-center group-hover:from-green-100 group-hover:to-emerald-100 transition-colors duration-200">
-                    <i class="{$category.icon|default='fas fa-folder'} text-green-600 text-sm"></i>
-                </div>
-                <h3 class="text-base font-semibold text-gray-700 group-hover:text-green-600 transition-colors duration-200">{$category.name}</h3>
-                <i class="fas fa-chevron-down text-xs text-gray-400 transition-transform duration-300 category-arrow ml-auto"></i>
-            </button>
-            <div class="category-content">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                    {foreach $category.sites as $site}
-                    {include file="partials/site_card" /}
-                    {/foreach}
-                </div>
-            </div>
+    {foreach $publicCategories as $category}
+    {if condition="$category.sites && count($category.sites) > 0"}
+    <div class="content-card mb-5">
+        <div class="cat-title">
+            <i class="{$category.icon|default='fas fa-folder'}" style="color: #27ae60;"></i>
+            <h2>{$category.name}</h2>
         </div>
-        {/if}
-        {/foreach}
+        <div class="sites-grid">
+            {foreach $category.sites as $site}
+            {include file="partials/site_card" /}
+            {/foreach}
+        </div>
     </div>
+    {/if}
+    {/foreach}
     {/if}
 </div>
 
-<div id="addCategoryModal" class="fixed inset-0 z-50 hidden">
+<div id="addCategoryModal" style="display:none;" class="fixed inset-0 z-50">
     <div class="modal-overlay absolute inset-0" onclick="hideAddCategoryModal()"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl border border-amber-100/40 p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-5 flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 flex items-center justify-center">
-                <i class="fas fa-folder-plus text-amber-600 text-sm"></i>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md content-card" style="padding: 24px;">
+        <div class="cat-title mb-5">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(var(--theme-color-rgb), 0.08); display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-folder-plus" style="color: var(--theme-color);"></i>
             </div>
-            添加分类
-        </h3>
+            <h3 class="text-lg font-semibold" style="color: var(--main-color);">添加分类</h3>
+        </div>
         <form action="/my/add_category" method="POST" class="space-y-5">
             {:token_field()}
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">分类名称</label>
-                <input type="text" name="name" required placeholder="请输入分类名称" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-400 transition-all duration-200">
+                <label class="block text-sm font-medium mb-1.5" style="color: var(--muted-color2);">分类名称</label>
+                <input type="text" name="name" required placeholder="请输入分类名称" class="w-full px-4 py-2.5 border-0 rounded-xl text-sm outline-none" style="background: var(--body-bg); color: var(--main-color);">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5">图标</label>
+                <label class="block text-sm font-medium mb-1.5" style="color: var(--muted-color2);">图标</label>
                 <div class="grid grid-cols-8 gap-2" id="iconPicker">
                     {php}
                     $icons = ['fas fa-folder','fas fa-code','fas fa-palette','fas fa-gamepad','fas fa-graduation-cap','fas fa-newspaper','fas fa-music','fas fa-camera','fas fa-heart','fas fa-briefcase','fas fa-cloud','fas fa-shield-alt','fas fa-chart-line','fas fa-tools','fas fa-book','fas fa-film'];
                     {/php}
                     {foreach $icons as $icon}
-                    <label class="icon-option cursor-pointer flex items-center justify-center w-9 h-9 rounded-xl border-2 border-transparent hover:border-amber-300 hover:bg-amber-50 transition-all duration-150">
+                    <label class="icon-option cursor-pointer flex items-center justify-center w-9 h-9 rounded-lg" style="border: 2px solid transparent;" onmouseover="this.style.background='rgba(var(--theme-color-rgb),0.08)'" onmouseout="if(!this.querySelector('input').checked)this.style.background=''">
                         <input type="radio" name="icon" value="{$icon}" class="hidden">
-                        <i class="{$icon} text-gray-500"></i>
+                        <i class="{$icon}" style="color: var(--muted-color2);"></i>
                     </label>
                     {/foreach}
                 </div>
             </div>
             <div class="flex gap-3 pt-2">
-                <button type="button" onclick="hideAddCategoryModal()" class="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer">取消</button>
-                <button type="submit" class="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl text-sm font-medium hover:from-amber-600 hover:to-orange-600 shadow-sm transition-all duration-200 cursor-pointer">创建</button>
+                <button type="button" onclick="hideAddCategoryModal()" class="flex-1 py-2.5 rounded-xl text-sm font-medium cursor-pointer" style="background: var(--body-bg); color: var(--muted-color2);">取消</button>
+                <button type="submit" class="flex-1 py-2.5 rounded-xl text-sm font-medium text-white cursor-pointer" style="background: var(--theme-color);">创建</button>
             </div>
         </form>
     </div>
@@ -180,48 +130,37 @@
 
 {block name="js"}
 <script>
-function toggleCategory(btn) {
-    var content = btn.nextElementSibling;
-    var arrow = btn.querySelector('.category-arrow');
-    content.classList.toggle('collapsed');
-    arrow.style.transform = content.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
-}
+function toggleCategory(btn) { /* not used, categories auto-expand */ }
 
-function showAddCategoryModal() {
-    document.getElementById('addCategoryModal').classList.remove('hidden');
-}
-
-function hideAddCategoryModal() {
-    document.getElementById('addCategoryModal').classList.add('hidden');
-}
+function showAddCategoryModal() { document.getElementById('addCategoryModal').style.display = ''; }
+function hideAddCategoryModal() { document.getElementById('addCategoryModal').style.display = 'none'; }
 
 document.querySelectorAll('.icon-option').forEach(function(opt) {
     opt.addEventListener('click', function() {
         document.querySelectorAll('.icon-option').forEach(function(o) {
-            o.classList.remove('border-amber-500', 'bg-amber-50');
-            o.classList.add('border-transparent');
+            o.style.borderColor = 'transparent';
+            o.style.background = '';
+            o.querySelector('input').checked = false;
         });
-        this.classList.remove('border-transparent');
-        this.classList.add('border-amber-500', 'bg-amber-50');
+        this.style.borderColor = 'var(--theme-color)';
+        this.style.background = 'rgba(var(--theme-color-rgb), 0.08)';
+        this.querySelector('input').checked = true;
     });
 });
 
-var draggedItem = null;
-var dragContainer = null;
+// Category toggle
+document.querySelectorAll('.category-arrow').forEach(function(arrow) {
+    arrow.addEventListener('click', function() {
+        var card = this.closest('.content-card');
+        var content = card.querySelector('.category-content');
+        content.classList.toggle('collapsed');
+        this.style.transform = content.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
+    });
+});
 
-function handleDragStart(e) {
-    draggedItem = this;
-    dragContainer = this.parentElement;
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', '');
-    this.classList.add('opacity-50');
-}
-
-function handleDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-}
-
+var draggedItem = null, dragContainer = null;
+function handleDragStart(e) { draggedItem = this; dragContainer = this.parentElement; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', ''); this.classList.add('opacity-50'); }
+function handleDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
 function handleDrop(e) {
     e.preventDefault();
     if (dragContainer && draggedItem) {
@@ -230,27 +169,20 @@ function handleDrop(e) {
         var toItem = e.target.closest('.drag-item');
         if (toItem && toItem !== draggedItem) {
             var toIndex = children.indexOf(toItem);
-            if (fromIndex < toIndex) {
-                dragContainer.insertBefore(draggedItem, toItem.nextSibling);
-            } else {
-                dragContainer.insertBefore(draggedItem, toItem);
-            }
+            if (fromIndex < toIndex) dragContainer.insertBefore(draggedItem, toItem.nextSibling);
+            else dragContainer.insertBefore(draggedItem, toItem);
         }
     }
     draggedItem.classList.remove('opacity-50');
     saveOrder();
 }
-
 function saveOrder() {
-    var items = document.querySelectorAll('.sites-container .drag-item');
+    var items = document.querySelectorAll('.sites-grid .drag-item');
     var ids = [];
     items.forEach(function(item) { ids.push(item.getAttribute('data-id')); });
-    fetch('/my/reorder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'ids=' + ids.join(',')
-    }).then(function(r) { return r.json(); })
-      .then(function(res) { if (res.code === 0) console.log('排序已保存'); });
+    fetch('/my/reorder', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'ids=' + ids.join(',') })
+    .then(function(r) { return r.json(); })
+    .then(function(res) { if (res.code === 0) console.log('排序已保存'); });
 }
 </script>
 {/block}

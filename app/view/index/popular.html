@@ -3,37 +3,40 @@
 {block name="title"}热门网站 - WebNav{/block}
 
 {block name="content"}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-10">
-        <div class="flex items-center gap-3 mb-2">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200/60 flex items-center justify-center">
-                <i class="fas fa-fire text-orange-500"></i>
+<div style="margin-top: 24px;">
+    <div class="content-card">
+        <div class="cat-title">
+            <i class="fas fa-fire" style="color: #ff6b35;"></i>
+            <h2>热门网站</h2>
+        </div>
+        {if condition="!$sites->isEmpty()"}
+        <div class="sites-grid">
+            {foreach $sites as $site}
+            <a href="/redirect?url={$site.url}" target="_blank" class="site-item">
+                <div class="site-icon-wrap">
+                    <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" onerror="this.src='/static/default-favicon.svg'">
+                </div>
+                <div class="site-info">
+                    <div class="site-title">{$site.title}</div>
+                    <div class="site-desc">{$site.description|default=''}</div>
+                </div>
+                <span class="site-goto"><i class="fas fa-external-link-alt"></i></span>
+            </a>
+            {/foreach}
+        </div>
+        <div style="margin-top: 24px; text-align: center;">
+            {$sites|raw}
+        </div>
+        {else}
+        <div style="text-align: center; padding: 60px 20px;">
+            <div style="width: 64px; height: 64px; border-radius: 16px; background: rgba(255,107,53,0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                <i class="fas fa-fire text-2xl" style="color: #ff6b35;"></i>
             </div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">热门网站</h1>
+            <h3 class="text-lg font-semibold mb-2" style="color: var(--main-color);">暂无热门</h3>
+            <p style="color: var(--muted-color);" class="mb-4">还没有任何点击数据</p>
+            <a href="/" style="color: var(--theme-color);" class="inline-flex items-center gap-1 text-sm font-medium cursor-pointer"><i class="fas fa-arrow-left text-xs"></i>返回首页</a>
         </div>
-        <p class="text-gray-500 ml-[52px]">点击量最高的网站</p>
+        {/if}
     </div>
-
-    {if condition="!$sites->isEmpty()"}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {foreach $sites as $site}
-        {include file="partials/site_card" /}
-        {/foreach}
-    </div>
-    <div class="mt-12 flex justify-center">
-        {$sites|raw}
-    </div>
-    {else}
-    <div class="text-center py-24">
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200/60 mb-6">
-            <i class="fas fa-fire text-3xl text-orange-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">暂无热门</h3>
-        <p class="text-gray-400 mb-6 font-light">还没有任何点击数据</p>
-        <a href="/" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 transition-colors duration-200 cursor-pointer font-medium">
-            <i class="fas fa-arrow-left text-xs"></i>返回首页
-        </a>
-    </div>
-    {/if}
 </div>
 {/block}

@@ -2,40 +2,52 @@
 
 {block name="title"}搜索: {$keyword} - WebNav{/block}
 
-{block name="content"}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-10">
-        <div class="flex items-center gap-3 mb-2">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 flex items-center justify-center">
-                <i class="fas fa-search text-blue-600"></i>
-            </div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">
-                搜索: <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">{$keyword}</span>
+{block name="banner"}
+<div class="banner-area" style="padding: 40px 0 24px;">
+    <div style="max-width: var(--content-max-width); margin: 0 auto; padding: 0 16px;">
+        <div class="text-center">
+            <h1 class="text-2xl font-bold text-white mb-2 tracking-tight">
+                搜索: <span style="opacity: 0.9;">{$keyword}</span>
             </h1>
+            <p class="text-white/70 text-sm mb-6">共找到 {$count|default=0} 个结果</p>
+            <form action="/search" method="GET" class="relative inline-block w-full max-w-xl">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" name="keyword" value="{$keyword}" placeholder="继续搜索..." class="search-input" autocomplete="off">
+            </form>
         </div>
-        <p class="text-gray-500 ml-[52px]">共找到 {$count|default=0} 个结果</p>
     </div>
+</div>
+{/block}
 
-    {if condition="$sites && $sites->total() > 0"}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+{block name="content"}
+{if condition="$sites && $sites->total() > 0"}
+<div class="content-card" style="margin-top: 24px;">
+    <div class="sites-grid">
         {foreach $sites as $site}
-        {include file="partials/site_card" /}
+        <a href="/redirect?url={$site.url}" target="_blank" class="site-item">
+            <div class="site-icon-wrap">
+                <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" onerror="this.src='/static/default-favicon.svg'">
+            </div>
+            <div class="site-info">
+                <div class="site-title">{$site.title}</div>
+                <div class="site-desc">{$site.description|default=''}</div>
+            </div>
+            <span class="site-goto"><i class="fas fa-external-link-alt"></i></span>
+        </a>
         {/foreach}
     </div>
-    <div class="mt-12 flex justify-center">
+    <div style="margin-top: 24px; text-align: center;">
         {$sites|raw}
     </div>
-    {else}
-    <div class="text-center py-24">
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/60 mb-6">
-            <i class="fas fa-search text-3xl text-blue-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">未找到相关网站</h3>
-        <p class="text-gray-400 mb-6 font-light">试试其他关键词搜索</p>
-        <a href="/" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 transition-colors duration-200 cursor-pointer font-medium">
-            <i class="fas fa-arrow-left text-xs"></i>返回首页
-        </a>
-    </div>
-    {/if}
 </div>
+{else}
+<div style="text-align: center; padding: 80px 20px;">
+    <div style="width: 64px; height: 64px; border-radius: 16px; background: rgba(var(--theme-color-rgb), 0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+        <i class="fas fa-search text-2xl" style="color: var(--theme-color);"></i>
+    </div>
+    <h3 class="text-lg font-semibold mb-2" style="color: var(--main-color);">未找到相关网站</h3>
+    <p style="color: var(--muted-color);" class="mb-4">试试其他关键词搜索</p>
+    <a href="/" style="color: var(--theme-color);" class="inline-flex items-center gap-1 text-sm font-medium cursor-pointer"><i class="fas fa-arrow-left text-xs"></i>返回首页</a>
+</div>
+{/if}
 {/block}
