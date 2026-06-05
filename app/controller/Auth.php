@@ -12,6 +12,8 @@ class Auth extends BaseController
 {
     public function login()
     {
+        View::assign('hide_sidebars', true);
+
         if ($this->request->isGet()) {
             return View::fetch();
         }
@@ -95,6 +97,8 @@ class Auth extends BaseController
 
     public function register()
     {
+        View::assign('hide_sidebars', true);
+
         if ($this->request->isGet()) {
             return View::fetch();
         }

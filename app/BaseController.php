@@ -60,6 +60,12 @@ abstract class BaseController
             $user = User::find($userId);
             View::assign('user', $user);
         }
+        $pathinfo = $this->request->pathinfo();
+        $suffix = '.html';
+        if (str_ends_with($pathinfo, $suffix)) {
+            $pathinfo = substr($pathinfo, 0, -strlen($suffix));
+        }
+        View::assign('current_path', $pathinfo ?: '/');
     }
 
     /**

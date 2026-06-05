@@ -11,14 +11,15 @@
     <link rel="stylesheet" href="/static/css/fa.css">
     <style>
         :root {
-            --theme-color: #f1404b;
-            --theme-color-rgb: 241, 64, 75;
-            --main-color: #333;
-            --body-bg: #f2f4f7;
-            --muted-color: #999;
-            --muted-color2: #666;
-            --border-color: #eee;
-            --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --theme-color: #e8590c;
+            --theme-color-rgb: 232, 89, 12;
+            --hover-color: #d1470b;
+            --main-color: #1a1a2e;
+            --body-bg: #f8f9fc;
+            --muted-color: #8b8fa3;
+            --muted-color2: #5a5e72;
+            --border-color: #ebeef5;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
             --main-radius: 12px;
             --aside-width: 180px;
             --nav-height: 50px;
@@ -30,44 +31,46 @@
         .line2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* Top navbar */
-        .top-nav { background: #f5d0fe; height: var(--nav-height); display: flex; align-items: center; padding: 0 20px; position: sticky; top: 0; z-index: 100; }
-        .top-nav .logo { font-size: 18px; font-weight: 700; color: #333; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+        .top-nav { background: #faf0ff; height: var(--nav-height); display: flex; align-items: center; padding: 0 20px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #f0e6f6; }
+        .top-nav .logo { font-size: 18px; font-weight: 700; color: #2d2d3f; text-decoration: none; display: flex; align-items: center; gap: 6px; }
         .top-nav .logo-icon { width: 28px; height: 28px; }
         .top-nav .nav-links { display: flex; align-items: center; gap: 18px; margin-left: 30px; }
-        .top-nav .nav-links a { color: #555; text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 4px; }
+        .top-nav .nav-links a { color: #6b7280; text-decoration: none; font-size: 13px; display: flex; align-items: center; gap: 4px; transition: color 0.2s; }
         .top-nav .nav-links a:hover { color: var(--theme-color); }
         .top-nav .nav-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-        .top-nav .nav-right .notice-text { font-size: 12px; color: #888; }
-        .top-nav .nav-right .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; cursor: pointer; }
-        .top-nav .nav-right .search-btn { cursor: pointer; color: #666; font-size: 16px; }
+        .top-nav .nav-right .notice-text { font-size: 12px; color: #9ca3af; }
+        .top-nav .nav-right .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; cursor: pointer; }
+        .top-nav .nav-right .search-btn { cursor: pointer; color: #6b7280; font-size: 16px; }
 
         /* Banner */
-        .banner { background: linear-gradient(135deg, #a855f7 0%, #7c3aed 40%, #6d28d9 100%); padding: 50px 0 60px; text-align: center; }
+        .banner { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%); padding: 60px 0 80px; text-align: center; }
         .banner-tabs { display: flex; justify-content: center; gap: 24px; margin-bottom: 18px; }
         .banner-tabs a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; padding-bottom: 4px; border-bottom: 2px solid transparent; }
         .banner-tabs a.active, .banner-tabs a:hover { color: #fff; border-bottom-color: #fff; }
         .banner-search { max-width: 520px; margin: 0 auto; position: relative; }
         .banner-search input { width: 100%; padding: 14px 56px 14px 20px; border-radius: 30px; border: none; font-size: 15px; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .banner-search button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: var(--theme-color); border: none; color: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .banner-search button { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; background: var(--theme-color); border: none; color: #fff; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s; }
+        .banner-search button:hover { opacity: 0.9; }
         .banner-links { margin-top: 14px; display: flex; justify-content: center; gap: 16px; }
         .banner-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 12px; }
         .banner-links a:hover { color: #fff; }
 
         /* Layout */
-        .page-body { max-width: var(--content-max-width); margin: 0 auto; padding: 0 16px; display: flex; gap: 16px; margin-top: -30px; position: relative; z-index: 10; }
+        .page-body { max-width: var(--content-max-width); margin: 0 auto; padding: 0 16px; display: flex; gap: 16px; }
 
         /* Left sidebar */
         .left-sidebar { width: var(--aside-width); flex-shrink: 0; }
-        .left-sidebar .sidebar-card { background: #fff; border-radius: var(--main-radius); box-shadow: var(--card-shadow); padding: 12px 0; position: sticky; top: 66px; }
-        .sidebar-item { display: flex; align-items: center; padding: 10px 16px; font-size: 13px; color: var(--muted-color2); text-decoration: none; transition: all 0.2s; gap: 10px; }
-        .sidebar-item:hover, .sidebar-item.active { color: var(--theme-color); background: rgba(var(--theme-color-rgb), 0.04); }
+        .left-sidebar .sidebar-card { background: #fff; border-radius: var(--main-radius); box-shadow: var(--card-shadow); padding: 12px 0; position: sticky; top: 66px; border: 1px solid var(--border-color); }
+        .sidebar-item { display: flex; align-items: center; padding: 10px 16px; font-size: 13px; color: var(--muted-color2); text-decoration: none; transition: all 0.2s; gap: 10px; border-left: 3px solid transparent; }
+        .sidebar-item:hover { color: var(--theme-color); background: rgba(var(--theme-color-rgb), 0.04); }
+        .sidebar-item.active { color: var(--theme-color); background: rgba(var(--theme-color-rgb), 0.06); border-left-color: var(--theme-color); font-weight: 500; }
         .sidebar-item i { width: 18px; text-align: center; font-size: 15px; }
 
         /* Main content */
         .main-area { flex: 1; min-width: 0; }
 
         /* Content card */
-        .content-card { background: #fff; border-radius: var(--main-radius); box-shadow: var(--card-shadow); padding: 20px; margin-bottom: 16px; }
+        .content-card { background: #fff; border-radius: var(--main-radius); box-shadow: var(--card-shadow); padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-color); }
 
         /* Category title */
         .cat-header { display: flex; align-items: center; margin-bottom: 16px; }
@@ -75,15 +78,15 @@
         .cat-header .cat-icon i { font-size: 11px; color: var(--theme-color); }
         .cat-header h2 { font-size: 15px; font-weight: 600; color: var(--main-color); margin: 0; }
         .cat-header .cat-meta { font-size: 12px; color: var(--muted-color); margin-left: 12px; }
-        .cat-header .cat-meta a { color: var(--muted-color); text-decoration: none; }
+        .cat-header .cat-meta a { color: var(--muted-color); text-decoration: none; transition: color 0.2s; }
         .cat-header .cat-meta a:hover { color: var(--theme-color); }
 
         /* Site grid */
         .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
 
         /* Site card */
-        .site-card { display: flex; align-items: flex-start; padding: 12px; border-radius: 10px; border: 1px solid #f0f0f0; transition: all 0.25s; text-decoration: none; background: #fff; }
-        .site-card:hover { border-color: var(--theme-color); box-shadow: 0 2px 12px rgba(var(--theme-color-rgb), 0.1); transform: translateY(-1px); }
+        .site-card { display: flex; align-items: flex-start; padding: 12px; border-radius: 10px; border: 1px solid var(--border-color); transition: all 0.25s; text-decoration: none; background: #fff; }
+        .site-card:hover { border-color: var(--theme-color); box-shadow: 0 4px 12px rgba(var(--theme-color-rgb), 0.08); transform: translateY(-2px); }
         .site-card-icon { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; flex-shrink: 0; margin-right: 10px; background: #f5f5f5; }
         .site-card-icon img { width: 100%; height: 100%; object-fit: cover; }
         .site-card-info { flex: 1; min-width: 0; }
@@ -102,7 +105,7 @@
 
         /* Right sidebar */
         .right-sidebar { width: 260px; flex-shrink: 0; }
-        .right-sidebar .widget { background: #fff; border-radius: var(--main-radius); box-shadow: var(--card-shadow); padding: 16px; margin-bottom: 16px; }
+        .right-sidebar .widget { background: #fff; border-radius: var(--main-radius); box-shadow: var(--card-shadow); padding: 16px; margin-bottom: 16px; border: 1px solid var(--border-color); }
         .widget-title { font-size: 14px; font-weight: 600; color: var(--main-color); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
         .widget-title i { color: var(--theme-color); font-size: 14px; }
         .trend-item { display: flex; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
@@ -124,7 +127,7 @@
         /* Footer */
         .footer { background: #fff; border-top: 1px solid var(--border-color); padding: 24px 0; margin-top: 30px; }
         .footer-inner { max-width: var(--content-max-width); margin: 0 auto; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; }
-        .footer a { color: var(--muted-color); text-decoration: none; font-size: 13px; }
+        .footer a { color: var(--muted-color); text-decoration: none; font-size: 13px; transition: color 0.2s; }
         .footer a:hover { color: var(--theme-color); }
 
         /* Pagination */
@@ -150,14 +153,18 @@
             .top-nav .nav-links { display: none; }
             .top-nav .nav-right .notice-text { display: none; }
         }
+
+        /* Auth pages: full-viewport layout */
+        body.flex-col.min-h-screen .page-body { flex: 1; display: flex; align-items: center; justify-content: center; }
+        body.flex-col.min-h-screen .page-body .main-area { width: 100%; }
     </style>
     {block name="css"}{/block}
 </head>
-<body>
+<body class="{if isset($hide_sidebars) && $hide_sidebars}flex flex-col min-h-screen{/if}">
     <!-- Top Navbar -->
     <nav class="top-nav">
         <a href="/" class="logo">
-            <svg class="logo-icon" viewBox="0 0 28 28" fill="none"><path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10S4 19.523 4 14z" fill="#f1404b"/><path d="M10 14l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="logo-icon" viewBox="0 0 28 28" fill="none"><path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10S4 19.523 4 14z" fill="var(--theme-color)"/><path d="M10 14l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             WebNav
         </a>
         <div class="nav-links">
@@ -183,8 +190,8 @@
                 </div>
             </div>
             {else}
-            <a href="/login" style="font-size:13px;color:#666;text-decoration:none;">登录</a>
-            <a href="/register" style="font-size:13px;color:#fff;background:var(--theme-color);padding:5px 14px;border-radius:15px;text-decoration:none;">注册</a>
+            <a href="/login" style="font-size:13px;color:#6b7280;text-decoration:none;">登录</a>
+            <a href="/register" style="font-size:13px;color:#fff;background:var(--theme-color);padding:5px 14px;border-radius:15px;text-decoration:none;transition:opacity 0.2s;">注册</a>
             {/if}
         </div>
     </nav>
@@ -192,14 +199,15 @@
     {block name="banner"}{/block}
 
     <div class="page-body">
+        {if !isset($hide_sidebars) || !$hide_sidebars}
         <!-- Left Sidebar -->
         <aside class="left-sidebar">
             <div class="sidebar-card">
-                <a href="/" class="sidebar-item {if request()->path() == '/'}active{/if}"><i class="fas fa-home"></i><span>首页</span></a>
-                <a href="/newest" class="sidebar-item {if request()->path() == 'newest'}active{/if}"><i class="fas fa-clock"></i><span>最新收录</span></a>
-                <a href="/popular" class="sidebar-item {if request()->path() == 'popular'}active{/if}"><i class="fas fa-fire"></i><span>热门网站</span></a>
+                <a href="/" class="sidebar-item {if $current_path == '/'}active{/if}"><i class="fas fa-home"></i><span>首页</span></a>
+                <a href="/newest" class="sidebar-item {if $current_path == 'newest'}active{/if}"><i class="fas fa-clock"></i><span>最新收录</span></a>
+                <a href="/popular" class="sidebar-item {if $current_path == 'popular'}active{/if}"><i class="fas fa-fire"></i><span>热门网站</span></a>
                 {if session('user_id')}
-                <a href="/bookmarks" class="sidebar-item {if request()->path() == 'bookmarks'}active{/if}"><i class="fas fa-bookmark"></i><span>我的书签</span></a>
+                <a href="/bookmarks" class="sidebar-item {if $current_path == 'bookmarks'}active{/if}"><i class="fas fa-bookmark"></i><span>我的书签</span></a>
                 {/if}
                 <div style="border-top: 1px solid #f0f0f0; margin: 6px 12px;"></div>
                 {if condition="isset($categories)"}
@@ -209,6 +217,7 @@
                 {/if}
             </div>
         </aside>
+        {/if}
 
         <!-- Main Content -->
         <div class="main-area">
@@ -216,6 +225,7 @@
         </div>
 
         <!-- Right Sidebar -->
+        {if !isset($hide_sidebars) || !$hide_sidebars}
         <aside class="right-sidebar">
             <div class="widget">
                 <div class="widget-title"><i class="fas fa-chart-line"></i> 站点统计</div>
@@ -235,6 +245,7 @@
                 <div style="font-size:12px;color:var(--muted-color);text-align:center;padding:10px 0;">暂无数据</div>
             </div>
         </aside>
+        {/if}
     </div>
 
     <!-- Footer -->
