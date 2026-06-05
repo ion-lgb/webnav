@@ -3,40 +3,32 @@
 {block name="title"}热门网站 - WebNav{/block}
 
 {block name="content"}
-<div style="margin-top: 24px;">
-    <div class="content-card">
-        <div class="cat-title">
-            <i class="fas fa-fire" style="color: #ff6b35;"></i>
-            <h2>热门网站</h2>
-        </div>
-        {if condition="!$sites->isEmpty()"}
-        <div class="sites-grid">
-            {foreach $sites as $site}
-            <a href="/redirect?url={$site.url}" target="_blank" class="site-item">
-                <div class="site-icon-wrap">
-                    <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" onerror="this.src='/static/default-favicon.svg'">
-                </div>
-                <div class="site-info">
-                    <div class="site-title">{$site.title}</div>
-                    <div class="site-desc">{$site.description|default=''}</div>
-                </div>
-                <span class="site-goto"><i class="fas fa-external-link-alt"></i></span>
-            </a>
-            {/foreach}
-        </div>
-        <div style="margin-top: 24px; text-align: center;">
-            {$sites|raw}
-        </div>
-        {else}
-        <div style="text-align: center; padding: 60px 20px;">
-            <div style="width: 64px; height: 64px; border-radius: 16px; background: rgba(255,107,53,0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                <i class="fas fa-fire text-2xl" style="color: #ff6b35;"></i>
-            </div>
-            <h3 class="text-lg font-semibold mb-2" style="color: var(--main-color);">暂无热门</h3>
-            <p style="color: var(--muted-color);" class="mb-4">还没有任何点击数据</p>
-            <a href="/" style="color: var(--theme-color);" class="inline-flex items-center gap-1 text-sm font-medium cursor-pointer"><i class="fas fa-arrow-left text-xs"></i>返回首页</a>
-        </div>
-        {/if}
+<div class="content-card">
+    <div class="cat-header">
+        <div class="cat-icon"><i class="fas fa-fire"></i></div>
+        <h2>热门网站</h2>
     </div>
+    {if condition="!$sites->isEmpty()"}
+    <div class="site-grid">
+        {foreach $sites as $site}
+        <a href="/redirect?url={$site.url}" target="_blank" class="site-card">
+            <div class="site-card-icon">
+                <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" onerror="this.src='/static/default-favicon.svg'">
+            </div>
+            <div class="site-card-info">
+                <div class="site-card-title">{$site.title}</div>
+                <div class="site-card-desc">{$site.description|default=''}</div>
+            </div>
+        </a>
+        {/foreach}
+    </div>
+    <div class="pagination" style="margin-top:20px;">{$sites|raw}</div>
+    {else}
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-fire"></i></div>
+        <h3>暂无热门</h3>
+        <p>还没有任何点击数据</p>
+    </div>
+    {/if}
 </div>
 {/block}

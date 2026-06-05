@@ -3,16 +3,22 @@
 {block name="title"}WebNav - 发现优质网站{/block}
 
 {block name="banner"}
-<div class="banner-area" id="banner">
-    <div style="max-width: var(--content-max-width); margin: 0 auto; padding: 0 16px;">
-        <div class="text-center">
-            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">发现优质网站</h1>
-            <p class="text-white/70 text-base mb-8 font-light">精选优质网站，助你高效上网</p>
-            <form action="/search" method="GET" class="relative inline-block w-full max-w-xl">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="keyword" placeholder="输入关键字搜索网站..." class="search-input" autocomplete="off">
-            </form>
-        </div>
+<div class="banner">
+    <div class="banner-tabs">
+        <a href="/" class="active">站内</a>
+        <a href="/popular">常用</a>
+        <a href="/search">搜索</a>
+        <a href="/newest">最新</a>
+    </div>
+    <div class="banner-search">
+        <form action="/search" method="GET">
+            <input type="text" name="keyword" placeholder="输入关键字搜索网站..." autocomplete="off">
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+    <div class="banner-links">
+        <a href="/about">关于</a>
+        <a href="/feedback">反馈</a>
     </div>
 </div>
 {/block}
@@ -20,75 +26,68 @@
 {block name="content"}
 <script>
 var siteCache = new Map();
-
 function renderSiteCard(site) {
     var iconUrl = site.icon_url || '/static/default-favicon.svg';
-    return '<a href="/redirect?url=' + encodeURIComponent(site.url) + '" target="_blank" class="site-item">' +
-        '<div class="site-icon-wrap"><img src="' + esc(iconUrl) + '" alt="" onerror="this.src=\'/static/default-favicon.svg\'"></div>' +
-        '<div class="site-info">' +
-        '<div class="site-title">' + esc(site.title) + '</div>' +
-        '<div class="site-desc">' + esc(site.description || '') + '</div>' +
-        '</div>' +
-        '<span class="site-goto"><i class="fas fa-external-link-alt"></i></span>' +
-        '</a>';
+    return '<a href="/redirect?url=' + encodeURIComponent(site.url) + '" target="_blank" class="site-card">' +
+        '<div class="site-card-icon"><img src="' + esc(iconUrl) + '" alt="" onerror="this.src=\'/static/default-favicon.svg\'"></div>' +
+        '<div class="site-card-info">' +
+        '<div class="site-card-title">' + esc(site.title) + '</div>' +
+        '<div class="site-card-desc">' + esc(site.description || '') + '</div>' +
+        '</div></a>';
 }
-
 function esc(s) {
     if (!s) return '';
-    var d = document.createElement('div');
-    d.innerText = s;
-    return d.innerHTML;
+    var d = document.createElement('div'); d.innerText = s; return d.innerHTML;
 }
-
 function loadCategorySites(categoryId) {
     if (siteCache.has(categoryId)) return;
     var container = document.getElementById('sites-' + categoryId);
     if (!container) return;
-    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--muted-color);"><i class="fas fa-spinner fa-pulse mr-2"></i>加载中...</div>';
+    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#999;"><i class="fas fa-spinner fa-pulse"></i> 加载中...</div>';
     fetch('/api/category/sites?id=' + categoryId)
         .then(function(r) { return r.json(); })
         .then(function(res) {
             if (res.code === 0) {
                 siteCache.set(categoryId, true);
                 if (res.data.length === 0) {
-                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--muted-color);"><i class="fas fa-inbox mr-1"></i>此分类暂无网站</div>';
+                    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#999;">此分类暂无网站</div>';
                 } else {
                     container.innerHTML = res.data.map(renderSiteCard).join('');
                 }
             }
         });
 }
-
 document.addEventListener('DOMContentLoaded', function() {
-    var contents = document.querySelectorAll('.category-content[data-loaded="false"]');
-    contents.forEach(function(content) {
-        loadCategorySites(content.getAttribute('data-category-id'));
+    document.querySelectorAll('.category-content[data-loaded="false"]').forEach(function(el) {
+        loadCategorySites(el.getAttribute('data-category-id'));
     });
 });
 </script>
 
 {foreach $categories as $category}
 <div class="content-card" id="cat-{$category.id}">
-    <div class="cat-title">
-        <i class="{$category.icon|default='fas fa-folder'}"></i>
+    <div class="cat-header">
+        <div class="cat-icon"><i class="{$category.icon|default='fas fa-folder'}"></i></div>
         <h2>{$category.name}</h2>
+        <div class="cat-meta">
+            <a href="/newest">发布</a> · <a href="/newest">更新</a> · <a href="/popular">浏览</a> · <a href="/popular">点赞</a> · <a href="/bookmarks">收藏</a>
+        </div>
     </div>
-    <div class="sites-grid sites-container category-content" id="sites-{$category.id}" data-category-id="{$category.id}" data-loaded="false">
-        <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--muted-color);">
-            <i class="fas fa-spinner fa-pulse mr-1"></i>加载中...
+    <div class="site-grid category-content" id="sites-{$category.id}" data-category-id="{$category.id}" data-loaded="false">
+        <div style="grid-column:1/-1;text-align:center;padding:20px;color:#999;">
+            <i class="fas fa-spinner fa-pulse"></i> 加载中...
         </div>
     </div>
 </div>
 {/foreach}
 
 {if condition="empty($categories) || count($categories) == 0"}
-<div class="content-card text-center" style="padding: 60px 20px;">
-    <div style="width: 64px; height: 64px; border-radius: 16px; background: rgba(var(--theme-color-rgb), 0.08); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <i class="fas fa-folder-open text-2xl" style="color: var(--theme-color);"></i>
+<div class="content-card">
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+        <h3>暂无分类</h3>
+        <p>管理员尚未添加任何导航分类</p>
     </div>
-    <h3 class="text-lg font-semibold mb-2" style="color: var(--main-color);">暂无分类</h3>
-    <p style="color: var(--muted-color);" class="mb-4">管理员尚未添加任何导航分类</p>
-    <a href="/" style="color: var(--theme-color);" class="inline-flex items-center gap-1 text-sm font-medium cursor-pointer"><i class="fas fa-sync-alt text-xs"></i>刷新页面</a>
 </div>
 {/if}
 {/block}

@@ -18,7 +18,12 @@ class Index extends BaseController
             ->order('sort_order', 'asc')
             ->select();
 
+        $siteCount = Site::where('is_public', 1)->count();
+        $catCount = count($categories);
+
         View::assign('categories', $categories);
+        View::assign('site_count', $siteCount);
+        View::assign('cat_count', $catCount);
         return View::fetch();
     }
 
