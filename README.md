@@ -4,14 +4,16 @@
 
 ## 功能特性
 
-- **分类导航** — 左侧栏分类 + 首页内容卡片式站点展示，支持拖拽排序
-- **站点评分** — 点赞/点踩功能，热门排行
+- **分类导航** — 左侧栏分类 + 首页内容卡片式站点展示
+- **搜索引擎选择器** — 搜索框支持 Google / Bing / 百度 / 站内切换，纯图标无文字
+- **搜索建议** — 实时自动补全，键盘导航（↑↓ Enter Esc），防抖 200ms
 - **智能搜索** — 全文搜索，按标题、描述、URL 关键词匹配
 - **智能填充** — 输入 URL 自动抓取站点标题、描述和 Favicon
 - **用户系统** — 注册/登录，admin 和 user 两种角色，session 认证
 - **安全机制** — CSRF 保护、XSS 过滤、暴力破解防护（5 次失败/15 分钟锁定）、开放重定向确认
 - **个人书签** — 登录用户可管理自己的书签和分类
 - **后台管理** — 分类/网站/用户/反馈 完整 CRUD，点击统计面板
+- **系统设置** — 主题色自定义、首页模块拖拽排序、模块显隐开关，前端实时联动
 - **Quill 编辑器** — 反馈页面和后台回复使用富文本编辑器
 - **响应式设计** — Tailwind CSS 卡片式布局，适配桌面/平板/手机
 
@@ -106,8 +108,9 @@ webnav/
 │   │       ├── Category.php    # 分类 CRUD
 │   │       ├── Site.php        # 网站 CRUD
 │   │       ├── User.php        # 用户管理
-│   │       └── Stats.php       # 点击统计
-│   ├── model/                  # User / Category / Site / Favorite
+│   │       ├── Stats.php       # 点击统计
+│   │       └── Setting.php     # 系统设置
+│   ├── model/                  # User / Category / Site / Favorite / Setting
 │   ├── middleware/              # AuthCheck / AdminCheck / Csrf
 │   └── view/
 │       ├── layout.html         # 前台布局（顶栏+Banner+侧边栏+页脚）
@@ -116,6 +119,7 @@ webnav/
 │       ├── auth/               # 登录 / 注册
 │       ├── my/                 # 个人书签页面
 │       ├── admin/              # 后台管理页面
+│       │   └── setting/        # 系统设置页面（颜色选择器+拖拽排序）
 │       └── partials/           # 共享组件（site_card / flash 等）
 ├── app.css                     # Tailwind CSS 入口文件
 ├── tailwind.config.js          # Tailwind 配置
@@ -149,12 +153,14 @@ webnav/
 | 用户管理 | `/admin/users` | 管理员 |
 | 点击统计 | `/admin/stats` | 管理员 |
 | 反馈管理 | `/admin/feedbacks` | 管理员 |
+| 系统设置 | `/admin/settings` | 管理员 |
 
 ## API 接口
 
 | 接口 | 方法 | 说明 |
 |------|------|------|
 | `/api/category/sites?id=N` | GET | 获取分类下站点列表（懒加载） |
+| `/api/search-suggest?keyword=...` | GET | 搜索建议（自动补全，返回标题+URL） |
 | `/api/fetch-site-meta?url=...` | GET | 抓取 URL 元信息（标题、描述、Favicon） |
 
 ## 数据库表
@@ -165,7 +171,7 @@ webnav/
 | wn_categories | wn_ | 分类表（公共分类 user_id=0） |
 | wn_sites | wn_ | 网站表（含点赞/点踩/点击数） |
 | wn_bookmarks | wn_ | 用户书签表 |
-| wn_login_attempts | wn_ | 登录尝试记录（暴力破解防护） |
+| wn_settings | wn_ | 系统设置表（主题色/模块开关/排序等 KV 存储） |
 
 ## License
 
