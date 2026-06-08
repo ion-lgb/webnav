@@ -9,6 +9,8 @@ use think\Validate;
 use think\facade\View;
 use app\model\User;
 
+use app\model\Setting;
+
 /**
  * 控制器基础类
  */
@@ -66,6 +68,10 @@ abstract class BaseController
             $pathinfo = substr($pathinfo, 0, -strlen($suffix));
         }
         View::assign('current_path', $pathinfo ?: '/');
+
+        // Load site settings for all views
+        $siteSettings = Setting::allCached();
+        View::assign('site_settings', $siteSettings);
     }
 
     /**

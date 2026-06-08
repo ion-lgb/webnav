@@ -96,6 +96,37 @@ class Api extends BaseController
         ]);
     }
 
+    public function searchSuggest()
+    {
+        $keyword = request()->param('keyword', '');
+        $keyword = trim($keyword);
+
+        if (mb_strlen($keyword, 'UTF-8') < 1) {
+            return json(['code' => 0, 'data' => []]);
+        }
+
+        $sites = Site::where('is_public', 1)
+            ->where(function ($query) use ($keyword) {
+                $query->whereLike('title', '%' . $keyword . '%')
+                    ->whereOr('description', 'like', '%' . $keyword . '%');
+            })
+            ->order('click_count', 'desc')
+            ->limit(8)
+            ->field('id, title, url, click_count')
+            ->select();
+
+        $data = [];
+        foreach ($sites as $site) {
+            $data[] = [
+                'id'    => $site->id,
+                'title' => $site->title,
+                'url'   => $site->url,
+            ];
+        }
+
+        return json(['code' => 0, 'data' => $data]);
+    }
+
     private function httpGet(string $url)
     {
         $ch = curl_init();

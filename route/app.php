@@ -9,6 +9,7 @@ Route::get('popular', 'Index/popular');
 
 Route::get('api/category/sites', 'Api/categorySites');
 Route::get('api/fetch-site-meta', 'Api/fetchSiteMeta');
+Route::get('api/search-suggest', 'Api/searchSuggest');
 
 Route::get('bookmarks', 'My/index');
 
@@ -56,6 +57,9 @@ Route::group('admin', function () {
 
     Route::get('pages', 'admin.Page/index');
     Route::rule('page/edit/:id', 'admin.Page/edit');
+
+    Route::get('settings', 'admin.Setting/index');
+    Route::post('settings/save', 'admin.Setting/save');
 
     Route::get('feedbacks', 'admin.Feedback/index');
     Route::rule('feedback/reply/:id', 'admin.Feedback/reply');

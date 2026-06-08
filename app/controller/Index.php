@@ -21,9 +21,17 @@ class Index extends BaseController
         $siteCount = Site::where('is_public', 1)->count();
         $catCount = count($categories);
 
+        $hotKeywords = Site::where('is_public', 1)
+            ->order('click_count', 'desc')
+            ->limit(6)
+            ->field('title')
+            ->select()
+            ->toArray();
+
         View::assign('categories', $categories);
         View::assign('site_count', $siteCount);
         View::assign('cat_count', $catCount);
+        View::assign('hot_keywords', $hotKeywords);
         return View::fetch();
     }
 
