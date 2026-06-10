@@ -1,9 +1,0 @@
-<a href="/redirect?url={$site.url}" target="_blank" class="site-card">
-    <div class="site-card-icon">
-        <img src="{if $site.icon_url}{$site.icon_url}{else}/static/default-favicon.svg{/if}" alt="" onerror="this.src='/static/default-favicon.svg'">
-    </div>
-    <div class="site-card-info">
-        <div class="site-card-title">{$site.title}</div>
-        {if $site.description}<div class="site-card-desc">{$site.description}</div>{/if}
-    </div>
-</a>

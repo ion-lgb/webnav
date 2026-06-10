@@ -1,32 +1,56 @@
 {
   "name": "webnav",
-  "version": "1.0.0",
-  "description": "基于 ThinkPHP 8 + MySQL + Tailwind CSS 的个人网址导航网站。",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "build:css": "npx tailwindcss -i app.css -o public/static/css/tailwind.css --minify",
-    "watch:css": "npx tailwindcss -i app.css -o public/static/css/tailwind.css --minify --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ion-lgb/webnav.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/ion-lgb/webnav/issues"
-  },
-  "homepage": "https://github.com/ion-lgb/webnav#readme",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^7.2.0",
-    "@tailwindcss/cli": "^4.3.0",
-    "quill": "^2.0.3",
-    "tailwindcss": "^4.3.0"
+    "@auth/drizzle-adapter": "^1.11.2",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@hookform/resolvers": "^5.4.0",
+    "@tiptap/extension-image": "^3.26.0",
+    "@tiptap/extension-link": "^3.26.0",
+    "@tiptap/extension-placeholder": "^3.26.0",
+    "@tiptap/pm": "^3.26.0",
+    "@tiptap/react": "^3.26.0",
+    "@tiptap/starter-kit": "^3.26.0",
+    "bcryptjs": "^3.0.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^4.4.0",
+    "drizzle-orm": "^0.45.2",
+    "lucide-react": "^1.17.0",
+    "mysql2": "^3.22.5",
+    "next": "16.2.9",
+    "next-auth": "^5.0.0-beta.31",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.5.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.78.0",
+    "shadcn": "^4.11.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.6.0",
+    "tw-animate-css": "^1.4.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
