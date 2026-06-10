@@ -5,7 +5,17 @@ import { SitesClient } from "./sites-client"
 
 export default async function SitesPage() {
   const data = await db
-    .select()
+    .select({
+      id: sites.id,
+      title: sites.title,
+      url: sites.url,
+      description: sites.description,
+      categoryId: sites.categoryId,
+      userId: sites.userId,
+      clickCount: sites.clickCount,
+      isPublic: sites.isPublic,
+      createdAt: sites.createdAt,
+    })
     .from(sites)
     .orderBy(desc(sites.createdAt))
     .limit(200)
