@@ -23,7 +23,12 @@ function truncateUrl(url: string) {
   return url.length > 50 ? url.slice(0, 50) + "..." : url
 }
 
-export function SitesClient({ initialData }: { initialData: Site[] }) {
+interface Category {
+  id: number
+  name: string
+}
+
+export function SitesClient({ initialData, categories }: { initialData: Site[]; categories: Category[] }) {
   const [data, setData] = useState(initialData)
   const [editingSite, setEditingSite] = useState<Site | null>(null)
 
@@ -56,12 +61,13 @@ export function SitesClient({ initialData }: { initialData: Site[] }) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <AddSiteDialog onSuccess={handleAdd} />
+        <AddSiteDialog onSuccess={handleAdd} categories={categories} />
       </div>
       <DataTable columns={columns} data={data} onDelete={handleDelete} onEdit={handleEdit} />
       {editingSite && (
         <EditSiteDialog
           site={editingSite}
+          categories={categories}
           open={!!editingSite}
           onOpenChange={(open) => { if (!open) setEditingSite(null) }}
           onSuccess={handleAdd}

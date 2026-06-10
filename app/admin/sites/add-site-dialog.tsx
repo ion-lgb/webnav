@@ -10,6 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -26,12 +33,17 @@ import {
 } from "@/components/ui/form"
 import { Plus, Loader2, Search } from "lucide-react"
 
+interface Category {
+  id: number
+  name: string
+}
+
 const siteSchema = z.object({
   title: z.string().min(1, "请输入网站名称"),
   url: z.string().min(1, "请输入网址").url("请输入有效网址"),
   description: z.string().optional(),
   iconUrl: z.string().optional(),
-  categoryId: z.string().min(1, "请输入分类ID"),
+  categoryId: z.string().min(1, "请选择分类"),
   userId: z.string().min(1, "请输入用户ID"),
   isPublic: z.boolean(),
 })
@@ -40,15 +52,20 @@ type SiteFormValues = z.infer<typeof siteSchema>
 
 interface AddSiteDialogProps {
   onSuccess: () => void
+  categories: Category[]
 }
 
-export function AddSiteDialog({ onSuccess }: AddSiteDialogProps) {
+export function AddSiteDialog({ onSuccess, categories }: AddSiteDialogProps) {
   const [open, setOpen] = useState(false)
   const [fetching, setFetching] = useState(false)
 
   const form = useForm<SiteFormValues>({
     resolver: zodResolver(siteSchema),
-    defaultValues: { title: "", url: "", description: "", iconUrl: "", categoryId: "1", userId: "1", isPublic: true },
+    defaultValues: {
+      title: "", url: "", description: "", iconUrl: "",
+      categoryId: categories[0] ? String(categories[0].id) : "",
+      userId: "1", isPublic: true,
+    },
   })
 
   async function fetchMeta() {
@@ -73,7 +90,10 @@ export function AddSiteDialog({ onSuccess }: AddSiteDialogProps) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...data,
+        title: data.title,
+        url: data.url,
+        description: data.description || null,
+        iconUrl: data.iconUrl || null,
         categoryId: parseInt(data.categoryId),
         userId: parseInt(data.userId),
         isPublic: data.isPublic ? 1 : 0,
@@ -93,22 +113,17 @@ export function AddSiteDialog({ onSuccess }: AddSiteDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus className="mr-1 h-4 w-4" />
-          添加网站
-        </Button>
+        <Button size="sm"><Plus className="mr-1 h-4 w-4" />添加网站</Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>添加网站</DialogTitle>
-        </DialogHeader>
+        <DialogHeader><DialogTitle>添加网站</DialogTitle></DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField control={form.control} name="url" render={({ field }) => (
               <FormItem>
                 <FormLabel>网址</FormLabel>
                 <div className="flex gap-2">
-                  <FormControl><Input placeholder="https://example.com" {...field} className="flex-1" /></FormControl>
+                  <FormControl><Input placeholder="https://example.com" {...field} /></FormControl>
                   <Button type="button" variant="outline" size="sm" onClick={fetchMeta} disabled={fetching}>
                     {fetching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                     智能填充
@@ -118,34 +133,33 @@ export function AddSiteDialog({ onSuccess }: AddSiteDialogProps) {
               </FormItem>
             )} />
             <FormField control={form.control} name="title" render={({ field }) => (
-              <FormItem>
-                <FormLabel>网站名称</FormLabel>
-                <FormControl><Input placeholder="网站名称" {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            <FormField control={form.control} name="description" render={({ field }) => (
-              <FormItem>
-                <FormLabel>描述</FormLabel>
-                <FormControl><Textarea placeholder="网站描述（选填）" rows={2} {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-            <FormField control={form.control} name="iconUrl" render={({ field }) => (
-              <FormItem>
-                <FormLabel>图标 URL</FormLabel>
-                <FormControl><Input placeholder="自动获取或手动输入" {...field} /></FormControl>
-                <FormMessage />
-              </FormItem>
+              <FormItem><FormLabel>网站名称</FormLabel><FormControl><Input placeholder="网站名称" {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <div className="grid grid-cols-2 gap-4">
               <FormField control={form.control} name="categoryId" render={({ field }) => (
-                <FormItem><FormLabel>分类 ID</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel>分类</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl><SelectTrigger><SelectValue placeholder="选择分类" /></SelectTrigger></FormControl>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={String(cat.id)}>{cat.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
               )} />
               <FormField control={form.control} name="userId" render={({ field }) => (
                 <FormItem><FormLabel>用户 ID</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
+            <FormField control={form.control} name="description" render={({ field }) => (
+              <FormItem><FormLabel>描述</FormLabel><FormControl><Textarea placeholder="网站描述（选填）" rows={2} {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="iconUrl" render={({ field }) => (
+              <FormItem><FormLabel>图标 URL</FormLabel><FormControl><Input placeholder="自动获取或手动输入" {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
             <FormField control={form.control} name="isPublic" render={({ field }) => (
               <FormItem className="flex items-center gap-2">
                 <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
