@@ -3,20 +3,26 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Search, Globe } from "lucide-react"
+import { Search, Globe, ChevronDown } from "lucide-react"
 import { Google, Baidu, Bing } from "@lobehub/icons"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface BannerProps {
   hotKeywords?: { title: string }[]
 }
 
 const engines = [
-  { key: "google", url: "https://www.google.com/search?q=", icon: Google },
-  { key: "baidu", url: "https://www.baidu.com/s?wd=", icon: Baidu },
-  { key: "bing", url: "https://www.bing.com/search?q=", icon: Bing },
-  { key: "local", url: null, icon: ({ size }: { size?: number }) => <Globe size={size} /> },
+  { key: "google", url: "https://www.google.com/search?q=", icon: Google.Color },
+  { key: "baidu", url: "https://www.baidu.com/s?wd=", icon: Baidu.Color },
+  { key: "bing", url: "https://www.bing.com/search?q=", icon: Bing.Color },
+  { key: "local", url: null, icon: Globe },
 ]
 
 const tabs = [
@@ -41,6 +47,8 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
     }
   }
 
+  const ActiveIcon = engines.find((e) => e.key === engineKey)!.icon
+
   return (
     <div className="bg-gradient-to-br from-violet-600 via-violet-700 to-violet-900 py-16 pb-20">
       <div className="max-w-[var(--content-max-width)] mx-auto px-4 text-center">
@@ -57,30 +65,37 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
         </nav>
 
         <form onSubmit={handleSubmit} className="max-w-[560px] mx-auto mb-6">
-          <div className="flex items-center bg-white rounded-full shadow-lg overflow-hidden">
-            <div className="flex items-center gap-1 pl-2 pr-1 shrink-0">
-              {engines.map((engine) => {
-                const Icon = engine.icon
-                const isActive = engine.key === engineKey
-                return (
-                  <button
-                    key={engine.key}
-                    type="button"
-                    onClick={() => setEngineKey(engine.key)}
-                    className={`p-2 rounded-full transition-all ${isActive ? "bg-muted/80" : "hover:bg-muted/50 opacity-50 hover:opacity-100"}`}
-                  >
-                    <Icon size={16} />
-                  </button>
-                )
-              })}
-            </div>
-            <div className="w-px h-6 bg-border shrink-0" />
+          <div className="flex items-stretch bg-white rounded-full shadow-lg overflow-hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button type="button" className="flex items-center gap-1 pl-3 pr-2 hover:bg-muted/50 transition-colors">
+                  <ActiveIcon size={18} />
+                  <ChevronDown size={12} className="text-muted-foreground" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-36">
+                {engines.map((engine) => {
+                  const Icon = engine.icon
+                  return (
+                    <DropdownMenuItem
+                      key={engine.key}
+                      onClick={() => setEngineKey(engine.key)}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <Icon size={16} />
+                      {engine.key === "local" ? "站内" : engine.key}
+                    </DropdownMenuItem>
+                  )
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="w-px bg-border my-2" />
             <input
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="搜索内容..."
-              className="flex-1 min-w-0 px-4 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
+              className="flex-1 px-4 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
             />
             <Button type="submit" size="icon" className="rounded-full m-1 shrink-0">
               <Search className="h-4 w-4" />
