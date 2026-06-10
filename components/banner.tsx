@@ -7,23 +7,16 @@ import { Search, Globe } from "lucide-react"
 import { Google, Baidu, Bing } from "@lobehub/icons"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 interface BannerProps {
   hotKeywords?: { title: string }[]
 }
 
 const engines = [
-  { key: "google", label: "Google", url: "https://www.google.com/search?q=", icon: Google },
-  { key: "baidu", label: "百度", url: "https://www.baidu.com/s?wd=", icon: Baidu },
-  { key: "bing", label: "Bing", url: "https://www.bing.com/search?q=", icon: Bing },
-  { key: "local", label: "站内", url: null, icon: ({ size }: { size?: number }) => <Globe size={size} /> },
+  { key: "google", url: "https://www.google.com/search?q=", icon: Google },
+  { key: "baidu", url: "https://www.baidu.com/s?wd=", icon: Baidu },
+  { key: "bing", url: "https://www.bing.com/search?q=", icon: Bing },
+  { key: "local", url: null, icon: ({ size }: { size?: number }) => <Globe size={size} /> },
 ]
 
 const tabs = [
@@ -64,32 +57,30 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
         </nav>
 
         <form onSubmit={handleSubmit} className="max-w-[560px] mx-auto mb-6">
-          <div className="flex items-stretch bg-white rounded-full shadow-lg overflow-hidden">
-            <Select value={engineKey} onValueChange={setEngineKey}>
-              <SelectTrigger className="w-auto min-w-[85px] border-0 shadow-none bg-transparent rounded-none h-auto px-3 py-0 text-xs gap-1.5 focus:ring-0">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {engines.map((engine) => {
-                  const Icon = engine.icon
-                  return (
-                    <SelectItem key={engine.key} value={engine.key}>
-                      <span className="flex items-center gap-2">
-                        <Icon size={14} />
-                        {engine.label}
-                      </span>
-                    </SelectItem>
-                  )
-                })}
-              </SelectContent>
-            </Select>
-            <div className="w-px bg-border my-2" />
+          <div className="flex items-center bg-white rounded-full shadow-lg overflow-hidden">
+            <div className="flex items-center gap-1 pl-2 pr-1 shrink-0">
+              {engines.map((engine) => {
+                const Icon = engine.icon
+                const isActive = engine.key === engineKey
+                return (
+                  <button
+                    key={engine.key}
+                    type="button"
+                    onClick={() => setEngineKey(engine.key)}
+                    className={`p-2 rounded-full transition-all ${isActive ? "bg-muted/80" : "hover:bg-muted/50 opacity-50 hover:opacity-100"}`}
+                  >
+                    <Icon size={16} />
+                  </button>
+                )
+              })}
+            </div>
+            <div className="w-px h-6 bg-border shrink-0" />
             <input
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="搜索内容..."
-              className="flex-1 px-4 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
+              className="flex-1 min-w-0 px-4 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
             />
             <Button type="submit" size="icon" className="rounded-full m-1 shrink-0">
               <Search className="h-4 w-4" />
