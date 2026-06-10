@@ -11,6 +11,13 @@ interface BannerProps {
   hotKeywords?: { title: string }[]
 }
 
+const searchEngines = [
+  { label: "Google", url: "https://www.google.com/search?q=" },
+  { label: "Baidu", url: "https://www.baidu.com/s?wd=" },
+  { label: "Bing", url: "https://www.bing.com/search?q=" },
+  { label: "本站", url: null },
+]
+
 const tabs = [
   { href: "/", label: "首页" },
   { href: "/newest", label: "最新" },
@@ -19,11 +26,16 @@ const tabs = [
 
 export function Banner({ hotKeywords = [] }: BannerProps) {
   const [keyword, setKeyword] = useState("")
+  const [engineIdx, setEngineIdx] = useState(0) // default Google
   const router = useRouter()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (keyword.trim()) {
+    if (!keyword.trim()) return
+    const engine = searchEngines[engineIdx]
+    if (engine.url) {
+      window.open(`${engine.url}${encodeURIComponent(keyword.trim())}`, "_blank")
+    } else {
       router.push(`/search?keyword=${encodeURIComponent(keyword.trim())}`)
     }
   }
@@ -43,14 +55,28 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
           ))}
         </nav>
 
-        <form onSubmit={handleSubmit} className="max-w-[520px] mx-auto mb-6">
-          <div className="flex items-center bg-white rounded-full shadow-lg overflow-hidden">
+        <form onSubmit={handleSubmit} className="max-w-[560px] mx-auto mb-6">
+          <div className="flex items-stretch bg-white rounded-full shadow-lg overflow-hidden">
+            <div className="relative flex-shrink-0">
+              <select
+                value={engineIdx}
+                onChange={(e) => setEngineIdx(Number(e.target.value))}
+                className="appearance-none h-full pl-4 pr-7 text-xs text-muted-foreground bg-transparent border-r border-border cursor-pointer outline-none"
+              >
+                {searchEngines.map((e, i) => (
+                  <option key={e.label} value={i}>{e.label}</option>
+                ))}
+              </select>
+              <svg className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
             <input
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              placeholder="搜索网站..."
-              className="flex-1 px-5 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
+              placeholder="搜索内容..."
+              className="flex-1 px-4 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
             />
             <Button type="submit" size="icon" className="rounded-full m-1 shrink-0">
               <Search className="h-4 w-4" />
