@@ -11,6 +11,7 @@ interface Site {
   title: string
   url: string
   description?: string | null
+  iconUrl?: string | null
   categoryId?: number
   userId?: number
   clickCount: number

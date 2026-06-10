@@ -27,6 +27,7 @@ const siteSchema = z.object({
   title: z.string().min(1, "请输入网站名称"),
   url: z.string().min(1, "请输入网址").url("请输入有效网址"),
   description: z.string().optional(),
+  iconUrl: z.string().optional(),
   categoryId: z.string().min(1, "请输入分类ID"),
   userId: z.string().min(1, "请输入用户ID"),
   isPublic: z.boolean(),
@@ -39,6 +40,7 @@ interface Site {
   title: string
   url: string
   description?: string | null
+  iconUrl?: string | null
   categoryId?: number
   userId?: number
   isPublic: number
@@ -58,6 +60,7 @@ export function EditSiteDialog({ site, open, onOpenChange, onSuccess }: EditSite
       title: site.title,
       url: site.url,
       description: site.description || "",
+      iconUrl: site.iconUrl || "",
       categoryId: String(site.categoryId || 1),
       userId: String(site.userId || 1),
       isPublic: site.isPublic === 1,
@@ -72,6 +75,7 @@ export function EditSiteDialog({ site, open, onOpenChange, onSuccess }: EditSite
         title: data.title,
         url: data.url,
         description: data.description || null,
+        iconUrl: data.iconUrl || null,
         categoryId: parseInt(data.categoryId),
         userId: parseInt(data.userId),
         isPublic: data.isPublic ? 1 : 0,
@@ -101,6 +105,9 @@ export function EditSiteDialog({ site, open, onOpenChange, onSuccess }: EditSite
             )} />
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem><FormLabel>描述</FormLabel><FormControl><Textarea rows={2} {...field} /></FormControl><FormMessage /></FormItem>
+            )} />
+            <FormField control={form.control} name="iconUrl" render={({ field }) => (
+              <FormItem><FormLabel>图标 URL</FormLabel><FormControl><Input placeholder="https://..." {...field} /></FormControl><FormMessage /></FormItem>
             )} />
             <div className="grid grid-cols-2 gap-4">
               <FormField control={form.control} name="categoryId" render={({ field }) => (
