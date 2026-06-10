@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { z } from "zod/v4"
+import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { eq, or } from "drizzle-orm"
 import { db } from "@/lib/db"

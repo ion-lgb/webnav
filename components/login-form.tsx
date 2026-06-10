@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
-import { z } from "zod/v4"
+import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 import {

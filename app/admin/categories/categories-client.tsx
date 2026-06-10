@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { format } from "date-fns"
 import { DataTable, type Column } from "@/components/admin/data-table"
+import { AddCategoryDialog } from "./add-category-dialog"
 
 interface Category {
   id: number
@@ -28,6 +29,14 @@ export function CategoriesClient({ initialData }: { initialData: Category[] }) {
     }
   }
 
+  async function handleAdd() {
+    const res = await fetch("/api/admin/categories")
+    if (res.ok) {
+      const json = await res.json()
+      setData(json.data as Category[])
+    }
+  }
+
   const columns: Column<Category>[] = [
     { key: "id", label: "ID" },
     { key: "name", label: "名称" },
@@ -50,5 +59,12 @@ export function CategoriesClient({ initialData }: { initialData: Category[] }) {
     },
   ]
 
-  return <DataTable columns={columns} data={data} onDelete={handleDelete} />
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <AddCategoryDialog onSuccess={handleAdd} />
+      </div>
+      <DataTable columns={columns} data={data} onDelete={handleDelete} />
+    </div>
+  )
 }

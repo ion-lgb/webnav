@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { format } from "date-fns"
 import { DataTable, type Column } from "@/components/admin/data-table"
+import { AddSiteDialog } from "./add-site-dialog"
 
 interface Site {
   id: number
@@ -24,6 +25,14 @@ export function SitesClient({ initialData }: { initialData: Site[] }) {
     const res = await fetch(`/api/admin/sites/${item.id}`, { method: "DELETE" })
     if (res.ok) {
       setData((prev) => prev.filter((s) => s.id !== item.id))
+    }
+  }
+
+  async function handleAdd() {
+    const res = await fetch("/api/admin/sites")
+    if (res.ok) {
+      const json = await res.json()
+      setData(json.data as Site[])
     }
   }
 
@@ -58,5 +67,12 @@ export function SitesClient({ initialData }: { initialData: Site[] }) {
     },
   ]
 
-  return <DataTable columns={columns} data={data} onDelete={handleDelete} />
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <AddSiteDialog onSuccess={handleAdd} />
+      </div>
+      <DataTable columns={columns} data={data} onDelete={handleDelete} />
+    </div>
+  )
 }
