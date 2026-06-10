@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
@@ -33,8 +33,15 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export function LoginForm() {
-  const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const error = searchParams.get("error")
+    if (error) {
+      toast.error("用户名或密码错误")
+    }
+  }, [searchParams])
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -46,22 +53,12 @@ export function LoginForm() {
 
   async function onSubmit(data: LoginFormValues) {
     setLoading(true)
-    try {
-      const result = await signIn("credentials", {
-        username: data.username,
-        password: data.password,
-        redirect: true,
-        callbackUrl: "/",
-      })
-
-      if (result?.error) {
-        toast.error("用户名或密码错误")
-        setLoading(false)
-      }
-    } catch {
-      toast.error("登录失败，请稍后重试")
-      setLoading(false)
-    }
+    await signIn("credentials", {
+      username: data.username,
+      password: data.password,
+      redirect: true,
+      callbackUrl: "/",
+    })
   }
 
   return (

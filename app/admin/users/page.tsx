@@ -20,7 +20,7 @@ export default async function UsersPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold mb-5">用户管理</h1>
+      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">用户管理</h1>
       <UsersClient initialData={data} />
     </div>
   )

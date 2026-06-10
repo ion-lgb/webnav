@@ -7,7 +7,7 @@ export default async function PagesPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold mb-5">页面管理</h1>
+      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">页面管理</h1>
       <PagesClient initialData={data} />
     </div>
   )

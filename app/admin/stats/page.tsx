@@ -51,7 +51,7 @@ export default async function StatsPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold mb-5">数据统计</h1>
+      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">数据统计</h1>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((stat) => {

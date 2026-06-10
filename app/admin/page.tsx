@@ -1,7 +1,7 @@
 import { db } from "@/lib/db"
 import { users, sites, categories, feedbacks } from "@/lib/db/schema"
 import { eq, sql } from "drizzle-orm"
-import { Card, CardHeader, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Users, Globe, FolderTree, MessageSquare } from "lucide-react"
 
 export default async function AdminDashboard() {
@@ -25,14 +25,14 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold mb-5">管理后台</h1>
+      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">管理后台</h1>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon
           return (
-            <Card key={stat.label}>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <span className="text-sm text-muted-foreground">{stat.label}</span>
+            <Card key={stat.label} className="shadow-none">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.label}</CardTitle>
                 <div className={`${stat.bg} p-2 rounded-lg`}>
                   <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>

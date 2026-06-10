@@ -15,7 +15,7 @@ export default async function AdminLayout({
       <Header />
       <div className="max-w-[1360px] mx-auto px-5 pt-5 flex gap-5 flex-1">
         <AdminSidebar />
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="flex-1 min-w-0 bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] border border-[var(--border-color)] p-6">{children}</main>
       </div>
       <Footer />
     </>
