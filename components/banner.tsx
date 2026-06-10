@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Search, Globe } from "lucide-react"
+import { Google, Baidu, Bing } from "@lobehub/icons"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -14,39 +15,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-function GoogleIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l-2.307 2.307c-1.2-1.147-2.787-1.787-4.8-1.787-3.56 0-6.453 2.92-6.453 6.453 0 3.533 2.893 6.453 6.453 6.453 3.56 0 4.587-2.187 4.907-3.88h-5.28"/>
-    </svg>
-  )
-}
-
-function BaiduIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M6.5 6a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM17.5 6a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM9 11.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM15 11.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5zM12 14a3 3 0 100 6 3 3 0 000-6z"/>
-    </svg>
-  )
-}
-
-function BingIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M5 3L9.5 12L5 21H8.5L13 12L8.5 3H5Z" />
-      <path d="M12 12L9 21H12.5L19 3C17 6 15 9 12 12Z" />
-    </svg>
-  )
-}
-
 interface BannerProps {
   hotKeywords?: { title: string }[]
 }
 
 const engines = [
-  { key: "google", label: "Google", url: "https://www.google.com/search?q=", icon: GoogleIcon },
-  { key: "baidu", label: "百度", url: "https://www.baidu.com/s?wd=", icon: BaiduIcon },
-  { key: "bing", label: "Bing", url: "https://www.bing.com/search?q=", icon: BingIcon },
+  { key: "google", label: "Google", url: "https://www.google.com/search?q=", icon: Google },
+  { key: "baidu", label: "百度", url: "https://www.baidu.com/s?wd=", icon: Baidu },
+  { key: "bing", label: "Bing", url: "https://www.bing.com/search?q=", icon: Bing },
   { key: "local", label: "站内", url: null, icon: ({ size }: { size?: number }) => <Globe size={size} /> },
 ]
 
