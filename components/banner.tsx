@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Search, Globe, ChevronDown } from "lucide-react"
+import { Search, Globe } from "lucide-react"
 import { Google, Baidu, Bing } from "@lobehub/icons"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -68,22 +68,20 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
           <div className="flex items-stretch bg-white rounded-full shadow-lg overflow-hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button type="button" className="flex items-center gap-1 pl-3 pr-2 hover:bg-muted/50 transition-colors">
+                <button type="button" className="p-2.5 hover:bg-muted/50 transition-colors">
                   <ActiveIcon size={18} />
-                  <ChevronDown size={12} className="text-muted-foreground" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-36">
+              <DropdownMenuContent align="start" className="w-12">
                 {engines.map((engine) => {
                   const Icon = engine.icon
                   return (
                     <DropdownMenuItem
                       key={engine.key}
                       onClick={() => setEngineKey(engine.key)}
-                      className="flex items-center gap-2 cursor-pointer"
+                      className="flex items-center justify-center cursor-pointer"
                     >
-                      <Icon size={16} />
-                      {engine.key === "local" ? "站内" : engine.key}
+                      <Icon size={18} />
                     </DropdownMenuItem>
                   )
                 })}
