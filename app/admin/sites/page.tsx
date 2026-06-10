@@ -13,7 +13,6 @@ export default async function SitesPage() {
         description: sites.description,
         iconUrl: sites.iconUrl,
         categoryId: sites.categoryId,
-        userId: sites.userId,
         clickCount: sites.clickCount,
         isPublic: sites.isPublic,
         createdAt: sites.createdAt,

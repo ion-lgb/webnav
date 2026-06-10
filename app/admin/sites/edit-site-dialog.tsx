@@ -41,7 +41,6 @@ const siteSchema = z.object({
   description: z.string().optional(),
   iconUrl: z.string().optional(),
   categoryId: z.string().min(1, "请选择分类"),
-  userId: z.string().min(1, "请输入用户ID"),
   isPublic: z.boolean(),
 })
 
@@ -54,7 +53,6 @@ interface Site {
   description?: string | null
   iconUrl?: string | null
   categoryId?: number
-  userId?: number
   isPublic: number
 }
 
@@ -75,7 +73,6 @@ export function EditSiteDialog({ site, categories, open, onOpenChange, onSuccess
       description: site.description || "",
       iconUrl: site.iconUrl || "",
       categoryId: String(site.categoryId || categories[0]?.id || ""),
-      userId: String(site.userId || 1),
       isPublic: site.isPublic === 1,
     },
   })
@@ -90,7 +87,6 @@ export function EditSiteDialog({ site, categories, open, onOpenChange, onSuccess
         description: data.description || null,
         iconUrl: data.iconUrl || null,
         categoryId: parseInt(data.categoryId),
-        userId: parseInt(data.userId),
         isPublic: data.isPublic ? 1 : 0,
       }),
     })
@@ -130,9 +126,6 @@ export function EditSiteDialog({ site, categories, open, onOpenChange, onSuccess
                   </Select>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField control={form.control} name="userId" render={({ field }) => (
-                <FormItem><FormLabel>用户 ID</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
             <FormField control={form.control} name="description" render={({ field }) => (

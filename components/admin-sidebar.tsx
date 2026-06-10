@@ -18,7 +18,6 @@ const navItems = [
   { href: "/admin", label: "仪表盘", icon: LayoutDashboard },
   { href: "/admin/categories", label: "分类管理", icon: FolderTree },
   { href: "/admin/sites", label: "网站管理", icon: Globe },
-  { href: "/admin/users", label: "用户管理", icon: Users },
   { href: "/admin/pages", label: "页面管理", icon: FileText },
   { href: "/admin/settings", label: "站点设置", icon: Settings },
   { href: "/admin/feedback", label: "反馈管理", icon: MessageSquare },

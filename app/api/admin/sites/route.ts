@@ -31,15 +31,15 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { userId, categoryId, title, url, description, iconUrl, isPublic, sortOrder } = body
+    const { categoryId, title, url, description, iconUrl, isPublic, sortOrder } = body
 
-    if (!title || !url || !userId || !categoryId) {
+    if (!title || !url || !categoryId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
     const now = new Date()
     const result = await db.insert(sites).values({
-      userId,
+      userId: 1,
       categoryId,
       title,
       url,

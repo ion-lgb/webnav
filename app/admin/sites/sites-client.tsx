@@ -13,7 +13,6 @@ interface Site {
   description?: string | null
   iconUrl?: string | null
   categoryId?: number
-  userId?: number
   clickCount: number
   isPublic: number
   createdAt: Date | null

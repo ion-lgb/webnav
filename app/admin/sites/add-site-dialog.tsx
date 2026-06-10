@@ -44,7 +44,6 @@ const siteSchema = z.object({
   description: z.string().optional(),
   iconUrl: z.string().optional(),
   categoryId: z.string().min(1, "请选择分类"),
-  userId: z.string().min(1, "请输入用户ID"),
   isPublic: z.boolean(),
 })
 
@@ -64,7 +63,7 @@ export function AddSiteDialog({ onSuccess, categories }: AddSiteDialogProps) {
     defaultValues: {
       title: "", url: "", description: "", iconUrl: "",
       categoryId: categories[0] ? String(categories[0].id) : "",
-      userId: "1", isPublic: true,
+      isPublic: true,
     },
   })
 
@@ -95,7 +94,6 @@ export function AddSiteDialog({ onSuccess, categories }: AddSiteDialogProps) {
         description: data.description || null,
         iconUrl: data.iconUrl || null,
         categoryId: parseInt(data.categoryId),
-        userId: parseInt(data.userId),
         isPublic: data.isPublic ? 1 : 0,
       }),
     })
@@ -149,9 +147,6 @@ export function AddSiteDialog({ onSuccess, categories }: AddSiteDialogProps) {
                   </Select>
                   <FormMessage />
                 </FormItem>
-              )} />
-              <FormField control={form.control} name="userId" render={({ field }) => (
-                <FormItem><FormLabel>用户 ID</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
               )} />
             </div>
             <FormField control={form.control} name="description" render={({ field }) => (

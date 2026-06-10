@@ -1,9 +1,8 @@
 import Link from "next/link"
-import { Home, Clock, Flame, Bookmark, Folder } from "lucide-react"
+import { Home, Clock, Flame, Folder } from "lucide-react"
 import { db } from "@/lib/db"
 import { categories } from "@/lib/db/schema"
 import { isNull, asc } from "drizzle-orm"
-import { getCurrentUser } from "@/lib/auth-utils"
 import { Card, CardContent } from "@/components/ui/card"
 
 const mainLinks = [
@@ -13,8 +12,6 @@ const mainLinks = [
 ]
 
 export async function LeftSidebar() {
-  const user = await getCurrentUser()
-
   const publicCategories = await db
     .select()
     .from(categories)
@@ -39,15 +36,6 @@ export async function LeftSidebar() {
                 </Link>
               )
             })}
-            {user && (
-              <Link
-                href="/bookmarks"
-                className="flex items-center gap-3 px-3 py-2 text-sm text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-              >
-                <Bookmark className="h-4 w-4 text-muted-foreground" />
-                我的书签
-              </Link>
-            )}
 
             {publicCategories.length > 0 && (
               <>

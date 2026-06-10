@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
-import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -105,10 +104,7 @@ export function LoginForm() {
           </form>
         </Form>
         <p className="text-center text-sm text-muted-foreground mt-4">
-          还没有账号？
-          <Link href="/register" className="text-[var(--main-color)] hover:underline ml-1">
-            注册
-          </Link>
+          WebNav 管理后台
         </p>
       </CardContent>
     </Card>
