@@ -50,19 +50,16 @@ export function LoginForm() {
       const result = await signIn("credentials", {
         username: data.username,
         password: data.password,
-        redirect: false,
+        redirect: true,
+        callbackUrl: "/",
       })
 
       if (result?.error) {
         toast.error("用户名或密码错误")
-        return
+        setLoading(false)
       }
-
-      router.push("/")
-      router.refresh()
     } catch {
       toast.error("登录失败，请稍后重试")
-    } finally {
       setLoading(false)
     }
   }

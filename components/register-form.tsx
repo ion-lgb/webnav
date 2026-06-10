@@ -73,20 +73,12 @@ export function RegisterForm() {
         return
       }
 
-      const signInResult = await signIn("credentials", {
+      await signIn("credentials", {
         username: data.username,
         password: data.password,
-        redirect: false,
+        redirect: true,
+        callbackUrl: "/",
       })
-
-      if (signInResult?.error) {
-        toast.error("注册成功，但自动登录失败，请手动登录")
-        router.push("/login")
-        return
-      }
-
-      router.push("/")
-      router.refresh()
     } catch {
       toast.error("注册失败，请稍后重试")
     } finally {
