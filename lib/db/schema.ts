@@ -116,7 +116,7 @@ export const pages = mysqlTable(
     id: int("id", { unsigned: true }).primaryKey().autoincrement(),
     slug: varchar("slug", { length: 50 }).notNull(),
     title: varchar("title", { length: 100 }).notNull(),
-    content: text("content", { mode: "string" }).notNull(),
+    content: text("content").notNull(),
     updatedBy: int("updated_by", { unsigned: true }),
     createdAt: datetime("created_at").default(sql`NULL`),
     updatedAt: datetime("updated_at").default(sql`NULL`),
