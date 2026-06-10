@@ -1,9 +1,10 @@
 import Link from "next/link"
-import { Home, Clock, Flame, Bookmark } from "lucide-react"
+import { Home, Clock, Flame, Bookmark, Folder } from "lucide-react"
 import { db } from "@/lib/db"
 import { categories } from "@/lib/db/schema"
 import { isNull, asc } from "drizzle-orm"
 import { getCurrentUser } from "@/lib/auth-utils"
+import { Card, CardContent } from "@/components/ui/card"
 
 const mainLinks = [
   { href: "/", label: "首页", icon: Home },
@@ -23,17 +24,17 @@ export async function LeftSidebar() {
   return (
     <aside className="hidden lg:block w-[var(--aside-width)] shrink-0">
       <div className="sticky top-[70px]">
-        <div className="bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] p-4">
-          <nav className="space-y-1">
+        <Card>
+          <CardContent className="p-3 space-y-0.5">
             {mainLinks.map((link) => {
               const Icon = link.icon
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--main-color)] hover:text-[var(--theme-color)] hover:bg-[var(--body-bg)] rounded-md transition-colors"
+                  className="flex items-center gap-3 px-3 py-2 text-sm text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4 text-muted-foreground" />
                   {link.label}
                 </Link>
               )
@@ -41,34 +42,30 @@ export async function LeftSidebar() {
             {user && (
               <Link
                 href="/bookmarks"
-                className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--main-color)] hover:text-[var(--theme-color)] hover:bg-[var(--body-bg)] rounded-md transition-colors"
+                className="flex items-center gap-3 px-3 py-2 text-sm text-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
               >
-                <Bookmark className="h-4 w-4" />
+                <Bookmark className="h-4 w-4 text-muted-foreground" />
                 我的书签
               </Link>
             )}
-          </nav>
 
-          {publicCategories.length > 0 && (
-            <>
-              <div className="my-3 border-t border-[var(--border-color)]" />
-              <nav className="space-y-1">
+            {publicCategories.length > 0 && (
+              <>
+                <div className="my-2 mx-3 border-t" />
                 {publicCategories.map((category) => (
                   <Link
                     key={category.id}
                     href={`/category/${category.id}`}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--main-color)] hover:text-[var(--theme-color)] hover:bg-[var(--body-bg)] rounded-md transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
-                    {category.icon && (
-                      <span className={category.icon} />
-                    )}
+                    <Folder className="h-4 w-4" />
                     {category.name}
                   </Link>
                 ))}
-              </nav>
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </aside>
   )

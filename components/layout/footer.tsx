@@ -1,35 +1,23 @@
 import Link from "next/link"
-import { Compass } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-[var(--border-color)] py-6 mt-auto">
-      <div className="max-w-[var(--content-max-width)] mx-auto px-4 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm text-[var(--muted-color)]">
-          <Compass className="h-4 w-4" />
-          <span>© 2026 WebNav</span>
+    <footer className="border-t bg-card mt-auto">
+      <div className="max-w-[var(--content-max-width)] mx-auto px-4 py-6 flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          &copy; {new Date().getFullYear()} WebNav
         </div>
-
-        <div className="flex items-center gap-4">
-          <Link
-            href="/about"
-            className="text-sm text-[var(--muted-color)] hover:text-[var(--theme-color)]"
-          >
+        <nav className="flex items-center gap-6">
+          <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             关于
           </Link>
-          <Link
-            href="/feedback"
-            className="text-sm text-[var(--muted-color)] hover:text-[var(--theme-color)]"
-          >
+          <Link href="/feedback" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             反馈
           </Link>
-          <Link
-            href="/privacy"
-            className="text-sm text-[var(--muted-color)] hover:text-[var(--theme-color)]"
-          >
+          <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             隐私政策
           </Link>
-        </div>
+        </nav>
       </div>
     </footer>
   )

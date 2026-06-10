@@ -30,25 +30,21 @@ export function SiteCard({ title, url, description, iconUrl }: SiteCardProps) {
   return (
     <Link
       href={`/redirect?url=${encodeURIComponent(url)}`}
-      className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-[var(--border-color)] hover:border-primary hover:shadow-[0_4px_12px_rgba(var(--theme-color-rgb),0.08)] hover:-translate-y-0.5 transition-all"
+      className="flex items-center gap-3 p-3 rounded-lg bg-card border hover:border-primary hover:shadow-sm hover:-translate-y-0.5 transition-all"
     >
       <Image
         src={faviconSrc}
         alt={title}
-        width={40}
-        height={40}
-        className="rounded-[10px] shrink-0"
+        width={36}
+        height={36}
+        className="rounded-lg shrink-0 bg-muted"
         onError={() => setImgError(true)}
         unoptimized
       />
       <div className="min-w-0 flex-1">
-        <div className="text-sm font-semibold text-[var(--main-color)] line1">
-          {title}
-        </div>
+        <div className="text-sm font-medium text-foreground line1">{title}</div>
         {description && (
-          <div className="text-xs text-[var(--muted-color)] line1 mt-0.5">
-            {description}
-          </div>
+          <div className="text-xs text-muted-foreground line1 mt-0.5">{description}</div>
         )}
       </div>
     </Link>

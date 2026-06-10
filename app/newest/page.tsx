@@ -4,6 +4,8 @@ import { eq, desc, sql } from "drizzle-orm"
 import { PublicLayout } from "@/components/layout/public-layout"
 import { SiteCard } from "@/components/site-card"
 import { SitePagination } from "@/components/site-pagination"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { Clock } from "lucide-react"
 
 const PAGE_SIZE = 24
@@ -36,45 +38,44 @@ export default async function NewestPage({
 
   return (
     <PublicLayout>
-      <div className="bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] p-5">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-            <Clock className="w-4 h-4 text-primary" />
-          </div>
-          <h2 className="text-[15px] font-semibold text-[var(--main-color)]">
-            最新收录
-          </h2>
-          <span className="text-xs text-[var(--muted-color)] bg-[var(--body-bg)] px-2 py-0.5 rounded-full">
-            {total}
-          </span>
-        </div>
-
-        {siteList.length === 0 ? (
-          <div className="text-center py-12 text-[var(--muted-color)] text-sm">
-            暂无收录的网站
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-4">
-              {siteList.map((site) => (
-                <SiteCard
-                  key={site.id}
-                  id={site.id}
-                  title={site.title}
-                  url={site.url}
-                  description={site.description}
-                  iconUrl={site.iconUrl}
-                />
-              ))}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-7 h-7 rounded-md bg-primary/10">
+              <Clock className="w-4 h-4 text-primary" />
             </div>
-            <SitePagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              basePath="/newest"
-            />
-          </>
-        )}
-      </div>
+            <CardTitle className="text-base">最新收录</CardTitle>
+            <Badge variant="secondary" className="text-xs">{total}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {siteList.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground text-sm">
+              暂无收录的网站
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
+                {siteList.map((site) => (
+                  <SiteCard
+                    key={site.id}
+                    id={site.id}
+                    title={site.title}
+                    url={site.url}
+                    description={site.description}
+                    iconUrl={site.iconUrl}
+                  />
+                ))}
+              </div>
+              <SitePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath="/newest"
+              />
+            </>
+          )}
+        </CardContent>
+      </Card>
     </PublicLayout>
   )
 }
