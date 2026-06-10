@@ -29,7 +29,7 @@ export function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-56 shrink-0">
+    <aside className="w-[var(--aside-width)] shrink-0">
       <nav className="sticky top-[70px] bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] border border-[var(--border-color)] py-3">
         {navItems.map((item) => {
           const Icon = item.icon
@@ -43,7 +43,7 @@ export function AdminSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors border-l-[3px]",
+                "flex items-center gap-3 px-4 py-[11px] text-sm transition-colors border-l-[3px]",
                 isActive
                   ? "text-primary bg-primary/5 font-medium border-primary"
                   : "text-[var(--muted-color2)] border-transparent hover:text-primary hover:bg-primary/5"
