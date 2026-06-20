@@ -39,7 +39,7 @@ export function SitePagination({
       {currentPage > 1 && (
         <Link
           href={getPageUrl(currentPage - 1)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[13px] bg-gray-100 hover:bg-gray-200 transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[13px] bg-muted hover:bg-muted/80 transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
           上一页
@@ -52,8 +52,8 @@ export function SitePagination({
           href={getPageUrl(page)}
           className={`px-3 py-1.5 rounded-md text-[13px] transition-colors ${
             page === currentPage
-              ? "bg-primary text-white"
-              : "bg-gray-100 hover:bg-gray-200"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted hover:bg-muted/80"
           }`}
         >
           {page}
@@ -63,7 +63,7 @@ export function SitePagination({
       {currentPage < totalPages && (
         <Link
           href={getPageUrl(currentPage + 1)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[13px] bg-gray-100 hover:bg-gray-200 transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[13px] bg-muted hover:bg-muted/80 transition-colors"
         >
           下一页
           <ChevronRight className="w-3.5 h-3.5" />

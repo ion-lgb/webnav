@@ -3,6 +3,7 @@ import { Header } from "./header"
 import { Footer } from "./footer"
 import { LeftSidebar } from "./left-sidebar"
 import { RightSidebar } from "./right-sidebar"
+import { getSiteSettings } from "@/lib/settings"
 
 interface PublicLayoutProps {
   children: ReactNode
@@ -10,27 +11,31 @@ interface PublicLayoutProps {
   banner?: ReactNode
 }
 
-export function PublicLayout({
+export async function PublicLayout({
   children,
   showSidebars = true,
   banner,
 }: PublicLayoutProps) {
+  const siteSettings = await getSiteSettings()
+  const showLeftSidebar = showSidebars && siteSettings.left_sidebar_enabled
+  const showRightSidebar = showSidebars
+
   return (
     <>
       <Header />
-      {banner}
+      {siteSettings.banner_enabled && banner}
       <div className="flex-1 max-w-[var(--content-max-width)] mx-auto w-full px-4 py-5 flex gap-5">
-        {showSidebars ? (
+        {showLeftSidebar || showRightSidebar ? (
           <>
-            <LeftSidebar />
+            {showLeftSidebar && <LeftSidebar />}
             <main className="flex-1 min-w-0">{children}</main>
-            <RightSidebar />
+            {showRightSidebar && <RightSidebar />}
           </>
         ) : (
           <main className="flex-1 max-w-4xl mx-auto w-full">{children}</main>
         )}
       </div>
-      <Footer />
+      {siteSettings.footer_enabled && <Footer />}
     </>
   )
 }

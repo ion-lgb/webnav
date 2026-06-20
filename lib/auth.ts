@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { users } from "@/lib/db/schema"
 import { authConfig } from "./auth.config"
+import { checkLoginAttempt, recordFailedAttempt, clearAttempts } from "./login-guard"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -15,9 +16,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         if (!credentials?.username || !credentials?.password) {
           return null
+        }
+
+        const ip =
+          request?.headers?.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+          request?.headers?.get("x-real-ip") ||
+          "unknown"
+
+        const lockStatus = await checkLoginAttempt(ip)
+        if (lockStatus.locked) {
+          throw new Error("TOO_MANY_ATTEMPTS")
         }
 
         const username = credentials.username as string
@@ -31,17 +42,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .then((rows) => rows[0])
 
         if (!user) {
+          await recordFailedAttempt(ip)
           return null
         }
 
         if (user.status !== 1) {
+          await recordFailedAttempt(ip)
           return null
         }
 
         const passwordValid = await bcrypt.compare(password, user.password)
         if (!passwordValid) {
+          await recordFailedAttempt(ip)
           return null
         }
+
+        await clearAttempts(ip)
 
         return {
           id: String(user.id),

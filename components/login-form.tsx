@@ -37,7 +37,9 @@ export function LoginForm() {
 
   useEffect(() => {
     const error = searchParams.get("error")
-    if (error) {
+    if (error === "TOO_MANY_ATTEMPTS") {
+      toast.error("登录尝试过多，请15分钟后再试")
+    } else if (error) {
       toast.error("用户名或密码错误")
     }
   }, [searchParams])
@@ -56,7 +58,7 @@ export function LoginForm() {
       username: data.username,
       password: data.password,
       redirect: true,
-      callbackUrl: "/",
+      callbackUrl: searchParams.get("callbackUrl") || "/admin",
     })
   }
 

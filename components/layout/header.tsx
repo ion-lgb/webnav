@@ -1,10 +1,15 @@
 import Link from "next/link"
 import { getCurrentUser } from "@/lib/auth-utils"
+import { getSiteSettings } from "@/lib/settings"
 import { UserMenu } from "./user-menu"
 import { HeaderNav } from "./header-nav"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export async function Header() {
-  const user = await getCurrentUser()
+  const [user, siteSettings] = await Promise.all([
+    getCurrentUser(),
+    getSiteSettings(),
+  ])
 
   return (
     <header className="sticky top-0 z-50 h-[var(--nav-height)] bg-secondary/50 border-b backdrop-blur-sm">
@@ -15,11 +20,14 @@ export async function Header() {
               <circle cx="14" cy="14" r="14" className="fill-primary" />
               <path d="M8 14L12 18L20 10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            WebNav
+            {siteSettings.site_name}
           </Link>
           <HeaderNav />
         </div>
-        <UserMenu user={user} />
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <UserMenu user={user} />
+        </div>
       </div>
     </header>
   )
