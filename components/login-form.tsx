@@ -37,7 +37,8 @@ export function LoginForm() {
 
   useEffect(() => {
     const error = searchParams.get("error")
-    if (error === "TOO_MANY_ATTEMPTS") {
+    const code = searchParams.get("code")
+    if (error === "CredentialsSignin" && code === "too_many_attempts") {
       toast.error("登录尝试过多，请15分钟后再试")
     } else if (error) {
       toast.error("用户名或密码错误")

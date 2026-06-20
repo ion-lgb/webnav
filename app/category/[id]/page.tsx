@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { categories, sites } from "@/lib/db/schema"
-import { eq, asc, and } from "drizzle-orm"
+import { eq, asc, and, isNull } from "drizzle-orm"
 import { PublicLayout } from "@/components/layout/public-layout"
 import { SiteCard } from "@/components/site-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,7 +20,7 @@ export default async function CategoryPage({
   const category = await db
     .select()
     .from(categories)
-    .where(eq(categories.id, categoryId))
+    .where(and(eq(categories.id, categoryId), isNull(categories.userId)))
     .limit(1)
     .then((rows) => rows[0])
 

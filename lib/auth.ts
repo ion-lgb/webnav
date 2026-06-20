@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { CredentialsSignin } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { eq } from "drizzle-orm"
@@ -6,6 +6,10 @@ import { db } from "@/lib/db"
 import { users } from "@/lib/db/schema"
 import { authConfig } from "./auth.config"
 import { checkLoginAttempt, recordFailedAttempt, clearAttempts } from "./login-guard"
+
+class TooManyAttemptsError extends CredentialsSignin {
+  code = "too_many_attempts"
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -28,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const lockStatus = await checkLoginAttempt(ip)
         if (lockStatus.locked) {
-          throw new Error("TOO_MANY_ATTEMPTS")
+          throw new TooManyAttemptsError()
         }
 
         const username = credentials.username as string
