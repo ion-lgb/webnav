@@ -21,7 +21,7 @@ export default async function SearchPage({
 
   if (!keyword) {
     return (
-      <PublicLayout>
+      <PublicLayout showSidebars={false} wideContent>
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -71,7 +71,7 @@ export default async function SearchPage({
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
   return (
-    <PublicLayout>
+    <PublicLayout showSidebars={false} wideContent>
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ export default async function SearchPage({
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
                 {siteList.map((site) => (
                   <SiteCard
                     key={site.id}

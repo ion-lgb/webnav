@@ -8,12 +8,14 @@ import { getSiteSettings } from "@/lib/settings"
 interface PublicLayoutProps {
   children: ReactNode
   showSidebars?: boolean
+  wideContent?: boolean
   banner?: ReactNode
 }
 
 export async function PublicLayout({
   children,
   showSidebars = true,
+  wideContent = false,
   banner,
 }: PublicLayoutProps) {
   const siteSettings = await getSiteSettings()
@@ -32,7 +34,7 @@ export async function PublicLayout({
             {showRightSidebar && <RightSidebar />}
           </>
         ) : (
-          <main className="flex-1 max-w-4xl mx-auto w-full">{children}</main>
+          <main className={wideContent ? "flex-1 min-w-0 w-full" : "flex-1 max-w-4xl mx-auto w-full"}>{children}</main>
         )}
       </div>
       {siteSettings.footer_enabled && <Footer />}

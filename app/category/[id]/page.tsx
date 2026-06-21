@@ -33,7 +33,7 @@ export default async function CategoryPage({
     .orderBy(asc(sites.sortOrder))
 
   return (
-    <PublicLayout>
+    <PublicLayout showSidebars={false} wideContent>
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ export default async function CategoryPage({
               该分类暂无网站
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3">
               {siteList.map((site) => (
                 <SiteCard
                   key={site.id}

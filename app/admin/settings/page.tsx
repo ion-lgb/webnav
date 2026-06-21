@@ -11,7 +11,7 @@ export default async function SettingsPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">站点设置</h1>
+      <h1 className="text-xl font-semibold text-foreground mb-5">站点设置</h1>
       <SettingsClient initialData={data} />
     </div>
   )

@@ -11,7 +11,7 @@ export default async function FeedbackPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">反馈管理</h1>
+      <h1 className="text-xl font-semibold text-foreground mb-5">反馈管理</h1>
       <FeedbackClient initialData={data} />
     </div>
   )

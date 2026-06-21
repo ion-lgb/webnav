@@ -68,7 +68,7 @@ export async function RightSidebar() {
               {hotSites.map((site, index) => (
                 <Link
                   key={site.id}
-                  href={`/site/${site.id}`}
+                  href={`/redirect?url=${encodeURIComponent(site.url)}`}
                   className="flex items-center gap-2 py-1 text-sm text-foreground hover:text-primary transition-colors"
                 >
                   <Badge variant={getRankVariant(index)} className="w-5 h-5 flex items-center justify-center p-0 text-xs font-bold rounded">

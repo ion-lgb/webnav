@@ -28,7 +28,7 @@ export default async function SitesPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">网站管理</h1>
+      <h1 className="text-xl font-semibold text-foreground mb-5">网站管理</h1>
       <SitesClient initialData={data} categories={catData} />
     </div>
   )

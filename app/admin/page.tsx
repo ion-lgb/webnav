@@ -23,7 +23,7 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-xl font-semibold text-[var(--main-color)] mb-5">管理后台</h1>
+      <h1 className="text-xl font-semibold text-foreground mb-5">管理后台</h1>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon

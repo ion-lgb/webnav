@@ -28,7 +28,7 @@ export function AdminSidebar() {
 
   return (
     <aside className="w-full shrink-0 md:w-[var(--aside-width)]">
-      <nav className="grid grid-cols-2 bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] border border-[var(--border-color)] py-3 sm:grid-cols-3 md:sticky md:top-[70px] md:block">
+      <nav className="grid grid-cols-2 bg-card text-card-foreground rounded-[var(--main-radius)] shadow-[var(--card-shadow)] border border-border py-3 sm:grid-cols-3 md:sticky md:top-[70px] md:block">
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive =
@@ -44,7 +44,7 @@ export function AdminSidebar() {
                 "flex items-center gap-3 px-4 py-[11px] text-sm transition-colors border-l-[3px]",
                 isActive
                   ? "text-primary bg-primary/5 font-medium border-primary"
-                  : "text-[var(--muted-color2)] border-transparent hover:text-primary hover:bg-primary/5"
+                  : "text-muted-foreground border-transparent hover:text-primary hover:bg-primary/5"
               )}
             >
               <Icon className="h-4 w-4" />

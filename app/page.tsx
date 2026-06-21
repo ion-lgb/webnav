@@ -20,11 +20,15 @@ export default async function Home() {
       const catSites = await db
         .select()
         .from(sites)
-        .where(eq(sites.categoryId, cat.id))
+        .where(and(eq(sites.categoryId, cat.id), eq(sites.isPublic, 1)))
         .orderBy(asc(sites.sortOrder))
       return { ...cat, sites: catSites }
     })
   )
+
+  const visibleCategories = categoriesWithSites.filter((cat) => cat.sites.length > 0)
+  const visibleSiteCount = visibleCategories.reduce((total, cat) => total + cat.sites.length, 0)
+  const useFocusedLayout = visibleCategories.length <= 2 && visibleSiteCount <= 16
 
   const hotKeywords = await db
     .select({ title: sites.title })
@@ -36,9 +40,11 @@ export default async function Home() {
   return (
     <PublicLayout
       banner={<Banner hotKeywords={hotKeywords} />}
+      showSidebars={!useFocusedLayout}
+      wideContent={useFocusedLayout}
     >
       <div className="space-y-6">
-        {categoriesWithSites.map((cat) => (
+        {visibleCategories.map((cat) => (
           <Card key={cat.id} id={`cat-${cat.id}`}>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
@@ -50,7 +56,12 @@ export default async function Home() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3">
+              <div
+                className={useFocusedLayout
+                  ? "grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3"
+                  : "grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3"
+                }
+              >
                 {cat.sites.map((site) => (
                   <SiteCard
                     key={site.id}

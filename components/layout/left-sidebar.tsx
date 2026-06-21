@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Home, Clock, Flame, Folder } from "lucide-react"
+import { Home, Compass, Folder } from "lucide-react"
 import { db } from "@/lib/db"
 import { categories } from "@/lib/db/schema"
 import { isNull, asc } from "drizzle-orm"
@@ -7,8 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 
 const mainLinks = [
   { href: "/", label: "首页", icon: Home },
-  { href: "/newest", label: "最新收录", icon: Clock },
-  { href: "/popular", label: "热门网站", icon: Flame },
+  { href: "/explore", label: "发现网站", icon: Compass },
 ]
 
 export async function LeftSidebar() {

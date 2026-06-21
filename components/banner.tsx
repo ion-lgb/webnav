@@ -25,11 +25,26 @@ const engines = [
   { key: "local", label: "站内搜索", url: null, icon: Globe },
 ]
 
-const tabs = [
-  { href: "/", label: "首页" },
-  { href: "/newest", label: "最新" },
-  { href: "/popular", label: "热门" },
-]
+function getKeyword(title: string) {
+  const parts = title
+    .split(/\s+(?:[-–—|])\s+|[，,：:]/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+
+  const latinBrand = parts.find(
+    (part) => /^[a-z0-9][a-z0-9 .+_-]*$/i.test(part) && part.length <= 20
+  )
+  const shortest = parts.reduce(
+    (current, part) => (part.length < current.length ? part : current),
+    parts[0] || title
+  )
+  const searchKeyword = latinBrand || shortest
+
+  return {
+    label: searchKeyword.length > 12 ? `${searchKeyword.slice(0, 12)}…` : searchKeyword,
+    searchKeyword,
+  }
+}
 
 export function Banner({ hotKeywords = [] }: BannerProps) {
   const [keyword, setKeyword] = useState("")
@@ -51,22 +66,10 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
   const ActiveIcon = activeEngine.icon
 
   return (
-    <div className="bg-gradient-to-br from-violet-600 via-violet-700 to-violet-900 py-16 pb-20">
+    <div className="bg-[linear-gradient(135deg,#252936_0%,#3a3155_52%,#232631_100%)] py-12">
       <div className="max-w-[var(--content-max-width)] mx-auto px-4 text-center">
-        <nav className="flex items-center justify-center gap-6 mb-8">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className="text-white/80 text-sm pb-1 border-b-2 border-transparent hover:border-white/50 hover:text-white transition-colors"
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </nav>
-
         <form onSubmit={handleSubmit} className="max-w-[560px] mx-auto mb-6">
-          <div className="flex items-stretch bg-white rounded-full shadow-lg overflow-hidden">
+          <div className="flex items-stretch bg-card text-card-foreground rounded-full border border-border shadow-lg overflow-hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
@@ -111,13 +114,16 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
         {hotKeywords.length > 0 && (
           <div className="flex items-center justify-center flex-wrap gap-2">
             <span className="text-white/60 text-xs mr-1">热门搜索:</span>
-            {hotKeywords.map((kw) => (
-              <Link key={kw.title} href={`/search?keyword=${encodeURIComponent(kw.title)}`}>
-                <Badge variant="secondary" className="bg-white/15 text-white hover:bg-white/25 backdrop-blur cursor-pointer">
-                  {kw.title}
-                </Badge>
-              </Link>
-            ))}
+            {hotKeywords.map((kw) => {
+              const { label, searchKeyword } = getKeyword(kw.title)
+              return (
+                <Link key={kw.title} href={`/search?keyword=${encodeURIComponent(searchKeyword)}`}>
+                  <Badge variant="secondary" className="bg-white/15 text-white hover:bg-white/25 backdrop-blur cursor-pointer">
+                    {label}
+                  </Badge>
+                </Link>
+              )
+            })}
           </div>
         )}
       </div>
