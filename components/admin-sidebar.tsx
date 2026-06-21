@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   FolderTree,
   Globe,
-  Users,
   FileText,
   Settings,
   MessageSquare,
@@ -28,8 +27,8 @@ export function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-[var(--aside-width)] shrink-0">
-      <nav className="sticky top-[70px] bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] border border-[var(--border-color)] py-3">
+    <aside className="w-full shrink-0 md:w-[var(--aside-width)]">
+      <nav className="grid grid-cols-2 bg-white rounded-[var(--main-radius)] shadow-[var(--card-shadow)] border border-[var(--border-color)] py-3 sm:grid-cols-3 md:sticky md:top-[70px] md:block">
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive =

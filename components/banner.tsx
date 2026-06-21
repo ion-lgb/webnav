@@ -19,10 +19,10 @@ interface BannerProps {
 }
 
 const engines = [
-  { key: "google", url: "https://www.google.com/search?q=", icon: Google.Color },
-  { key: "baidu", url: "https://www.baidu.com/s?wd=", icon: Baidu.Color },
-  { key: "bing", url: "https://www.bing.com/search?q=", icon: Bing.Color },
-  { key: "local", url: null, icon: Globe },
+  { key: "google", label: "Google", url: "https://www.google.com/search?q=", icon: Google.Color },
+  { key: "baidu", label: "百度", url: "https://www.baidu.com/s?wd=", icon: Baidu.Color },
+  { key: "bing", label: "Bing", url: "https://www.bing.com/search?q=", icon: Bing.Color },
+  { key: "local", label: "站内搜索", url: null, icon: Globe },
 ]
 
 const tabs = [
@@ -47,7 +47,8 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
     }
   }
 
-  const ActiveIcon = engines.find((e) => e.key === engineKey)!.icon
+  const activeEngine = engines.find((e) => e.key === engineKey)!
+  const ActiveIcon = activeEngine.icon
 
   return (
     <div className="bg-gradient-to-br from-violet-600 via-violet-700 to-violet-900 py-16 pb-20">
@@ -68,7 +69,11 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
           <div className="flex items-stretch bg-white rounded-full shadow-lg overflow-hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button type="button" className="p-2.5 hover:bg-muted/50 transition-colors">
+                <button
+                  type="button"
+                  className="p-2.5 hover:bg-muted/50 transition-colors"
+                  aria-label={`选择搜索引擎，当前为${activeEngine.label}`}
+                >
                   <ActiveIcon size={18} />
                 </button>
               </DropdownMenuTrigger>
@@ -80,6 +85,7 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
                       key={engine.key}
                       onClick={() => setEngineKey(engine.key)}
                       className="flex items-center justify-center cursor-pointer"
+                      aria-label={engine.label}
                     >
                       <Icon size={18} />
                     </DropdownMenuItem>
@@ -93,9 +99,10 @@ export function Banner({ hotKeywords = [] }: BannerProps) {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="搜索内容..."
+              aria-label="搜索内容"
               className="flex-1 px-4 py-3 text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground"
             />
-            <Button type="submit" size="icon" className="rounded-full m-1 shrink-0">
+            <Button type="submit" size="icon" className="rounded-full m-1 shrink-0" aria-label="搜索">
               <Search className="h-4 w-4" />
             </Button>
           </div>

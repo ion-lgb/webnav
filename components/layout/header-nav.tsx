@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "首页" },

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 
 const feedbackSchema = z.object({
   name: z.string().optional(),
-  email: z.union([z.email(), z.literal("")]).optional(),
+  email: z.union([z.email("请输入有效的邮箱地址"), z.literal("")]).optional(),
   content: z.string().min(1, "请输入反馈内容"),
 })
 

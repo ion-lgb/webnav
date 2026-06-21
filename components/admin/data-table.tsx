@@ -79,6 +79,7 @@ export function DataTable<T extends { id: number }>({
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => onEdit(item)}
+                        aria-label={`编辑 ID ${item.id}`}
                       >
                         <Pencil />
                       </Button>
@@ -86,7 +87,7 @@ export function DataTable<T extends { id: number }>({
                     {onDelete && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon-sm">
+                          <Button variant="ghost" size="icon-sm" aria-label={`删除 ID ${item.id}`}>
                             <Trash2 className="text-destructive" />
                           </Button>
                         </AlertDialogTrigger>
